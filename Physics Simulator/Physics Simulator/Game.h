@@ -11,16 +11,15 @@ struct Ball
 	int radius;
 	float vx;
 	float vy;
-	float x;
-	float y;
+	float pos[2];
 
 	Ball()
 	{
 		radius = 1;
 		vx = 0;
 		vy = 0;
-		x = 0;
-		y = 0;
+		pos[1] = 0;
+		pos[0] = 0;
 	}
 
 	Ball(int Radius, float Vx, float Vy, float X, float Y)
@@ -28,8 +27,8 @@ struct Ball
 		radius = Radius;
 		vx = Vx;
 		vy = Vy;
-		x = X;
-		y = Y;
+		pos[0] = X;
+		pos[1] = Y;
 	}
 };
 
@@ -50,12 +49,13 @@ public:
 	void Move(int ballIxdex);
 	void RandomSpawnBalls();
 	void CalculateColition(Ball *ball1, Ball* ball2);
-	bool CheckForColitions(int ballIndex, int *colitionBallIndex);
+	bool CheckForColitions();
 	void lenearInterpolation(int ballIndex, int bounderyX);
+	float Distance(float pos1[2], float pos2[2]);
 
 
 private:
-	static const int NUMBEROFBALLS = 20000;
+	static const int NUMBEROFBALLS = 20;
 	Ball ballsArrey[NUMBEROFBALLS];
 
 	float borderX = 0;

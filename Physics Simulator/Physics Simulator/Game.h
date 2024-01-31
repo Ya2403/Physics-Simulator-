@@ -1,34 +1,35 @@
 #pragma once
 
 #include "SDL.h"
-
+#include "Vector2.h"
 #include "iostream"
 #include <cstdlib>
+
 
 
 struct Ball
 {
 	int radius;
-	float vx;
-	float vy;
-	float pos[2];
+	Vector2 velocity;
+	Vector2 pos;
+	double mass;
 
 	Ball()
 	{
+		
 		radius = 1;
-		vx = 0;
-		vy = 0;
-		pos[1] = 0;
-		pos[0] = 0;
+		velocity = velocity.zeroVector();
+		pos = pos.zeroVector();
+		mass = 1;
 	}
 
-	Ball(int Radius, float Vx, float Vy, float X, float Y)
+	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass)
 	{
 		radius = Radius;
-		vx = Vx;
-		vy = Vy;
-		pos[0] = X;
-		pos[1] = Y;
+		velocity = Velocity;
+		pos = Pos;
+		mass = Mass;
+
 	}
 };
 
@@ -51,11 +52,13 @@ public:
 	void CalculateColition(Ball *ball1, Ball* ball2);
 	bool CheckForColitions();
 	void lenearInterpolation(int ballIndex, int bounderyX);
-	float Distance(float pos1[2], float pos2[2]);
+	float Distance(Vector2 pos1, Vector2 pos2);
+	void ProcessColition(Ball &ball1, Ball &ball2);
 
 
 private:
-	static const int NUMBEROFBALLS = 20;
+	double delta_time;
+	static const int NUMBEROFBALLS = 500;
 	Ball ballsArrey[NUMBEROFBALLS];
 
 	float borderX = 0;

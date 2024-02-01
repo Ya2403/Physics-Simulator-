@@ -58,7 +58,7 @@ public:
 
 private:
 	double delta_time;
-	static const int NUMBEROFBALLS = 500;
+	static const int NUMBEROFBALLS = 400;
 	Ball ballsArrey[NUMBEROFBALLS];
 
 	float borderX = 0;

@@ -202,14 +202,14 @@ void Game::RandomSpawnBalls()
 		{
 			double x = (rand() % 100) / 100.0 * windowWidht;
 			double y = (rand() % 100) / 100.0 * windowHight;
-			double vx = (rand() % 100) / 100.0 * 25.0 - 5;
-			double vy = (rand() % 100) / 100.0 * 25.0 - 5;
+			double vx = (rand() % 100) / 100.0 * 50 - 5;
+			double vy = (rand() % 100) / 100.0 * 50 - 5;
 
 
 			int radius = (rand() % 100) / 100.0 * maxradius + 5;
 			std::cout << radius << std::endl;
 			//ballsArrey[i] 
-			Ball *ball = new Ball(5, Vector2(vx, vy), Vector2(x, y), 10.0* 10/ maxradius);
+			Ball *ball = new Ball(10, Vector2(vx, vy), Vector2(x, y),10* radius / maxradius);
 
 			ballsArrey[i] = *ball;
 			
@@ -218,6 +218,12 @@ void Game::RandomSpawnBalls()
 
 		numOfBall++;
 	}
+
+	/*Ball ball1 = Ball(20, Vector2(4, 0), Vector2(50, 100), 10);
+	Ball ball2 = Ball(20, Vector2(-4, 0), Vector2(500, 100), 10);
+	ballsArrey[0] = ball1;
+	ballsArrey[1] = ball2;
+	numOfBall = 2;*/
 }
 
 float Game::Distance(Vector2 pos1, Vector2 pos2)
@@ -246,33 +252,23 @@ bool Game::CheckForColitions()
 
 void Game::ProcessColition(Ball  &ball1, Ball &ball2)
 {
-	//std::cout << "process colition" << std::endl;
-	//std::cout << "momentum 0 " <<ball1.mass* ball1.velocity.getMag()+ ball2.mass * ball2.velocity.getMag() << std::endl;
 	Vector2 centerOfgravityVelocity = Vector2(-(ball1.mass * ball1.velocity.x + ball2.mass * ball2.velocity.x) / (ball1.mass + ball2.mass), -(ball1.mass * ball1.velocity.y + ball2.mass * ball2.velocity.y) / (ball1.mass + ball2.mass));
-	//std::cout << centerOfgravityVelocity.x << " " << centerOfgravityVelocity.y << std::endl;
 	Vector2 centersDirVec = ((ball1.pos - ball2.pos));
 	centersDirVec.normalizeVector();
 	Vector2 CopycentersDirVec = centersDirVec;
-	centersDirVec = centersDirVec.calculateNormal();
 	centersDirVec.normalizeVector();
-	//std::cout <<"normvec "<< centersDirVec.x << " " << centersDirVec.y << std::endl;
 	Vector2 ball1VelInMref = ball1.velocity + centerOfgravityVelocity;
-	//std::cout << ball1VelInMref.getMag() << std::endl;
 	Vector2 ball2VelInMref = ball2.velocity + centerOfgravityVelocity;
 
 	ball1VelInMref = ball1VelInMref - (centersDirVec*(centersDirVec * ball1VelInMref))*2.0;
-	//std::cout << ball1VelInMref.getMag() << std::endl;
-
 	ball2VelInMref = ball2VelInMref - (centersDirVec * (centersDirVec * ball2VelInMref))*2.0;
 
 	ball1.velocity = ball1VelInMref - centerOfgravityVelocity;
 	
 	ball2.velocity = ball2VelInMref - centerOfgravityVelocity;
 
-	//std::cout << "momentum 1" << ball1.mass * ball1.velocity.getMag() + ball2.mass * ball2.velocity.getMag() << std::endl;
-	//std::cout << "end colition" << std::endl;
 	double distance = Distance(ball1.pos, ball2.pos) - (ball1.radius + ball2.radius);
-	if (distance<0 && abs(distance)>(ball1.radius + ball2.radius)/20.0)
+	if (distance<0)// && abs(distance)>(ball1.radius + ball2.radius)/30.0)
 	{
 		ball1.pos = ball1.pos - CopycentersDirVec * (distance * ball2.mass / (ball1.mass + ball2.mass));
 		ball2.pos = ball2.pos + CopycentersDirVec * (distance * ball1.mass / (ball1.mass + ball2.mass));

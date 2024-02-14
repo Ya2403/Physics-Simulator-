@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include "SDL.h"
 
 class Window
@@ -16,7 +17,7 @@ private:
 private:
 	std::string _title;
 	int _widht = 800;
-	int _hieght=600;
+	int _height=600;
 
 	bool _closed = false;
 

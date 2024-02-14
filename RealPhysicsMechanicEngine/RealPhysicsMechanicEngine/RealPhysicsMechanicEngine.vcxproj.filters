@@ -21,9 +21,27 @@
     <ClCompile Include="..\resourses\scripts\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\resourses\scripts\Balls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\resourses\scripts\Vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\Balls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\PhysicsEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

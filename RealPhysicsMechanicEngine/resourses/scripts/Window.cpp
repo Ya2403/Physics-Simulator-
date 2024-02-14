@@ -36,6 +36,31 @@ bool Window::init()
 		std::cerr << "failed to create window" << std::endl;
 		return 0;
 	}
+
+	_renderer = SDL_CreateRenderer(_window, -1, 0);
+	SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+
+	if (_renderer == nullptr)
+	{
+		
+		std::cout << "failed to create renderer" << std::endl;
+	}
 	
 	return true;
+}
+
+void Window::PollEvent()
+{
+	SDL_Event event;
+	if (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			_closed = true;
+			break;
+		default:
+			break;
+		}
+	}
 }

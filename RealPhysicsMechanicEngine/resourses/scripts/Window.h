@@ -12,12 +12,14 @@ public:
 	inline bool isClosed() const { return _closed; };
 	void PollEvent();
 
-	SDL_Renderer* _renderer = nullptr;
 
 	
 private:
 	bool init();
 	
+public:
+	SDL_Window* _window = nullptr;
+	SDL_Renderer* _renderer = nullptr;
 
 private:
 	std::string _title;
@@ -26,5 +28,5 @@ private:
 
 	bool _closed = false;
 
-	SDL_Window* _window = nullptr;
+	
 };

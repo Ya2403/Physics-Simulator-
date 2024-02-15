@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -24,12 +24,14 @@
     <ClCompile Include="..\resourses\scripts\main.cpp" />
     <ClCompile Include="..\resourses\scripts\Vector2.cpp" />
     <ClCompile Include="..\resourses\scripts\Window.cpp" />
+    <ClCompile Include="GraphycsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Balls.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h" />
     <ClInclude Include="..\resourses\scripts\Vector2.h" />
     <ClInclude Include="..\resourses\scripts\Window.h" />
+    <ClInclude Include="GraphycsSystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

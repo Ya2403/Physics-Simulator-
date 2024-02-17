@@ -20,18 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\resourses\scripts\Balls.cpp" />
-    <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp" />
+    <ClCompile Include="..\resourses\scripts\GraphicsSystem.cpp" />
     <ClCompile Include="..\resourses\scripts\main.cpp" />
+    <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp" />
     <ClCompile Include="..\resourses\scripts\Vector2.cpp" />
     <ClCompile Include="..\resourses\scripts\Window.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GraphycsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Balls.h" />
+    <ClInclude Include="..\resourses\scripts\GraphicsSystem.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h" />
     <ClInclude Include="..\resourses\scripts\Vector2.h" />
     <ClInclude Include="..\resourses\scripts\Window.h" />
-    <ClInclude Include="GraphycsSystem.h" />
+    <ClInclude Include="Engine.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

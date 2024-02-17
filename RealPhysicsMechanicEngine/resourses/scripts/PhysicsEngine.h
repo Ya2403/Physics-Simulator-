@@ -43,9 +43,8 @@ public:
 
 	void handeleEvents();
 	void update();
-	void render();
+	
 	void clean();
-	bool isRuningCheck() { return isRuning; };
 	void Move(int ballIxdex);
 	void RandomSpawnBalls();
 	void CalculateColition(Ball *ball1, Ball* ball2);

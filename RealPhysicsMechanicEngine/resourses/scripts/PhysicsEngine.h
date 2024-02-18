@@ -4,34 +4,7 @@
 #include "Vector2.h"
 #include "iostream"
 #include <cstdlib>
-
-
-
-struct Ball
-{
-	int radius;
-	Vector2 velocity;
-	Vector2 pos;
-	double mass;
-
-	Ball()
-	{
-		
-		radius = 1;
-		velocity = velocity.zeroVector();
-		pos = pos.zeroVector();
-		mass = 1;
-	}
-
-	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass)
-	{
-		radius = Radius;
-		velocity = Velocity;
-		pos = Pos;
-		mass = Mass;
-
-	}
-};
+#include "Ball.h"
 
 class PhysicsEngine
 {
@@ -40,22 +13,17 @@ public:
 	~PhysicsEngine();
 
 	void init(SDL_Renderer* renderer);
-
-	void handeleEvents();
 	void update();
 	
-	void clean();
 	void Move(int ballIxdex);
-	void RandomSpawnBalls();
 	void CalculateColition(Ball *ball1, Ball* ball2);
 	bool CheckForColitions();
 	void lenearInterpolation(int ballIndex, int bounderyX);
-	float Distance(Vector2 pos1, Vector2 pos2);
 	void ProcessColition(Ball &ball1, Ball &ball2);
 
 
 private:
-	double delta_time;
+	double delta_time = 0.01;
 	static const int NUMBEROFBALLS = 20;
 	Ball ballsArrey[NUMBEROFBALLS];
 
@@ -70,7 +38,5 @@ private:
 	float velocityY = 1;
 	bool isRuning;
 	int cnt = 0;
-	SDL_Renderer* _renderer;
-
 };
 

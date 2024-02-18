@@ -9,6 +9,8 @@ public:
 	~GraphicsSystem();
 	inline bool isRuning() const {return _window.isClosed();};
 	void DrawCircle(int32_t centreX, int32_t centreY, int32_t radius);
+	void Clean();
+	void Render();
 
 
 

@@ -21,7 +21,7 @@
     <ClCompile Include="..\resourses\scripts\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\resourses\scripts\Balls.cpp">
+    <ClCompile Include="..\resourses\scripts\Ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\resourses\scripts\Vector2.cpp">
@@ -36,7 +36,13 @@
     <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine.cpp">
+    <ClCompile Include="..\resourses\scripts\Engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\resourses\scripts\PhysicsObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ForceGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +50,7 @@
     <ClInclude Include="..\resourses\scripts\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\resourses\scripts\Balls.h">
+    <ClInclude Include="..\resourses\scripts\Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h">
@@ -56,7 +62,13 @@
     <ClInclude Include="..\resourses\scripts\GraphicsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
+    <ClInclude Include="..\resourses\scripts\Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\PhysicsObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

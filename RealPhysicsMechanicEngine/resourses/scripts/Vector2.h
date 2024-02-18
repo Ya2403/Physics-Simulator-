@@ -30,6 +30,8 @@ public:
 
 	double getDir();
 
+	double Distance(Vector2 vect);
+
 	void setX(double x);
 
 	void setY(double y);

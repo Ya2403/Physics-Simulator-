@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	{
 		window.PollEvent(); // the same but called from engine it self
 		engine.update(); // update engine should include graphics update and physics update
-		engine.render(); // should be here but rather in t
+		//engine.render(); // should be here but rather in t
 
 	}
 

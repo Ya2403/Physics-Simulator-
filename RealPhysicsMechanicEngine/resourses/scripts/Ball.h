@@ -1,13 +1,14 @@
+
 #pragma once
 #include "Vector2.h"
 #include "SDL.h"
 
-class Balls
+class Ball
 {
 public:
-	Balls();
-	Balls(int Radius, Vector2 Velocity, Vector2 Pos, double Mass);
-	void Draw();
+	Ball();
+	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass);
+
 
 private:
 	int _radius;

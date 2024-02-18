@@ -9,6 +9,12 @@ Vector2::Vector2()
 	this->dir = 0;
 }
 
+// Disctance between to points
+double Vector2::Distance(Vector2 vect)
+{
+	return sqrt((x - vect.x) * (x - vect.x) + (y - vect.y) * (y - vect.y));
+}
+
 // Constructor to 2D Vector
 Vector2::Vector2(double x, double y)
 {

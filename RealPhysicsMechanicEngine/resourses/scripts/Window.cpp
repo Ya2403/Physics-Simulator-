@@ -1,6 +1,8 @@
 #include "Window.h"
 #include <iostream>
 
+
+
 Window::Window(const std::string& title, int width, int height) :
 _title(title), _widht(width), _height(height)
 {

@@ -9,10 +9,10 @@ PhysicsEngine::~PhysicsEngine()
 
 }
 
-void PhysicsEngine::update()
+void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls)
 {
-	CheckForColitions();
-	for (int i = 0; i < numOfBall; i++)
+	CheckForColitions(Ball arrayOfBalls[], int numberOfBalls);
+	for (int i = 0; i < numberOfBalls; i++)
 	{
 		Move(i);
 	}
@@ -70,17 +70,17 @@ void PhysicsEngine::Move(int ballIxdex)
 }
 
 
-bool PhysicsEngine::CheckForColitions()
+bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 {
-	for (int i = 0; i < numOfBall; i++)
+	for (int i = 0; i < numberOfBalls; i++)
 	{
-		for (int j = i + 1; j < numOfBall; j++)
+		for (int j = i + 1; j < numberOfBalls; j++)
 		{
 			//std::cout << "colision" << std::endl;
-			if (ballsArrey[i].pos.Distance(ballsArrey[j].pos) <= (ballsArrey[i].radius + ballsArrey[j].radius))
+			if (arrayOfBalls[i]._physicsObject._pos.Distance(arrayOfBalls[j].pos) <= (arrayOfBalls[i].radius + arrayOfBalls[j].radius))
 			{
 
-				ProcessColition(ballsArrey[i], ballsArrey[j]);
+				ProcessColition(arrayOfBalls[i], ballsArrey[j]);
 				//perform colision
 				
 			}

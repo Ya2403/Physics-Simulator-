@@ -5,11 +5,12 @@
 class PhysicsObject
 {
 public:
-	PhysicsObject();
-	PhysicsObject(Vector2 Velocity, Vector2 Pos, double Mass);
+	PhysicsObject(Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
+	void AddForce(Vector2 force);
 
 
-private:
+
+public:
 	double _angulareVelocity = 0;
 	Vector2 _velocity = _velocity.zeroVector(); //in m/s
 	Vector2 _pos = _pos.zeroVector(); //in meters

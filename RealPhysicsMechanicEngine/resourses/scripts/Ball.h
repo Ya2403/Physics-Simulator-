@@ -2,19 +2,15 @@
 #pragma once
 #include "Vector2.h"
 #include "SDL.h"
+#include "PhysicsObject.h"
 
 class Ball
 {
 public:
-	Ball();
-	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass);
+	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
 
 
-private:
+public:
 	int _radius;
-	Vector2 _velocity;
-	Vector2 _pos;
-	double _mass;
-	SDL_Renderer* _renderer;
-	Vector2 _totalForce;
+	PhysicsObject _physicsObject;
 };

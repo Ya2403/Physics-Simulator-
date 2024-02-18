@@ -1,11 +1,12 @@
 #pragma once
-#include ""
+#include "Vector2.h"
+#include "PhysicsObject.h"
 
 
 class ForceGenerator
 {
 	ForceGenerator();
 public:
-	GenerateForce(Vec)
+	void GenerateForce(Vector2 force, PhysicsObject& object);
 };
 

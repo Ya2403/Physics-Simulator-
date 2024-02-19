@@ -5,3 +5,9 @@ _radius(Radius), _physicsObject(PhysicsObject(Velocity, Pos, Mass, totalForce))
 {
 
 }
+
+Ball::Ball():
+_radius(1), _physicsObject(PhysicsObject())
+{
+
+}

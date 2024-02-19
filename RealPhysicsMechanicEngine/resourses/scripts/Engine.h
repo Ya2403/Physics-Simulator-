@@ -5,7 +5,7 @@
 
 class Engine
 {
-	Engine();
+	Engine(const std::string& windowtitle, int width, int height); //should have all the stuff to inti the window that's 
 	~Engine();
 
 public:
@@ -21,7 +21,7 @@ private:
 	//Graphics component
 	GraphicsSystem _graphics;
 	//Physics component
-	PhysicsEngine physics;
+	PhysicsEngine _physics;
 
 	static const int MAX_NUMBER_OF_PHYSICS_OBJECTS = 20;
 	//pool of all physics object 

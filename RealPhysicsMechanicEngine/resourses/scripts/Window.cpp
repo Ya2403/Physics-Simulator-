@@ -15,6 +15,7 @@ _title(title), _widht(width), _height(height)
 Window::~Window()
 {
 	SDL_DestroyWindow(_window);
+	SDL_DestroyRenderer(_renderer);
 	SDL_Quit();
 }
 
@@ -28,7 +29,13 @@ bool Window::init()
 	if ((SDL_Init(SDL_INIT_EVERYTHING)) != 0)
 	{
 		std::cerr << "failed to initalise subsystem" << std::endl;
-		return 0;
+		return false;
+	}
+	
+	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
+	{
+		std::cerr << "Failed to initialize SDL_image.\n";
+		return false;
 	}
 	
 	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _widht, _height, 0);
@@ -36,7 +43,7 @@ bool Window::init()
 	if (_window == nullptr)
 	{
 		std::cerr << "failed to create window" << std::endl;
-		return 0;
+		return false;
 	}
 
 	_renderer = SDL_CreateRenderer(_window, -1, 0);
@@ -65,4 +72,9 @@ void Window::PollEvent()
 			break;
 		}
 	}
+}
+
+Window::Window()
+{
+
 }

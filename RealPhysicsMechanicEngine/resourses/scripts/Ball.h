@@ -8,9 +8,9 @@ class Ball
 {
 public:
 	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
-
+	Ball();
 
 public:
-	int _radius;
+	int _radius = 1;
 	PhysicsObject _physicsObject;
 };

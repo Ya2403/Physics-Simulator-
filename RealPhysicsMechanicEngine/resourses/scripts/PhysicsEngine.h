@@ -11,24 +11,17 @@ class PhysicsEngine
 public:
 	PhysicsEngine();
 	~PhysicsEngine();
-
-	void init(SDL_Renderer* renderer);
 	void update(Ball arrayOfBalls[], int numberOfBalls);
 	
-	void Move(int ballIxdex);
-	void CalculateColition(Ball *ball1, Ball* ball2);
+	void Move(Ball arrayOfBalls[], int ballIxdex);
 	bool CheckForColitions(Ball arrayOfBalls[], int numberOfBalls);
-	void lenearInterpolation(int ballIndex, int bounderyX);
+
+	void lenearInterpolation(int ballIndex, int bounderyX); //isn't yet a thing but in the near future should be
 	void ProcessColition(Ball &ball1, Ball &ball2);
 
 
 private:
 	double delta_time = 0.01;
-	int x= 50;
-	int y= 90;
-	float velocityXModule = 1;
-	float velocityY = 1;
 	bool isRuning;
-	int cnt = 0;
 };
 

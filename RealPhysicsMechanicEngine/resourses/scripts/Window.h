@@ -1,13 +1,14 @@
 #pragma once
 
 #include <string>
-
+#include <SDL_image.h>
 #include "SDL.h"
 
 class Window
 {
 public:
 	Window(const std::string& title, int width, int height);
+	Window();
 	~Window();
 	inline bool isClosed() const { return _closed; };
 	void PollEvent();
@@ -27,6 +28,4 @@ private:
 	int _height=600;
 
 	bool _closed = false;
-
-	
 };

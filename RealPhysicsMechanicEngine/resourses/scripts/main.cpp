@@ -1,7 +1,8 @@
 #include "SDL.h"
 #include "PhysicsEngine.h"
+#include "GraphicsSystem.h"
 #include "Window.h"
-
+#include "Ball.h"
 int main(int argc, char* argv[])
 {
 	/*
@@ -15,15 +16,17 @@ int main(int argc, char* argv[])
 	*/ 
 
 
-	PhysicsEngine engine = PhysicsEngine();
-	Window window("simulation engine", 800, 800);
-	engine.init(window._renderer);
-	while (!window.isClosed()) //Engine is Runnig
-	{
-		window.PollEvent(); // the same but called from engine it self
-		engine.update(); // update engine should include graphics update and physics update
-		//engine.render(); // should be here but rather in t
+	PhysicsEngine physics = PhysicsEngine();
+	GraphicsSystem graphics = GraphicsSystem("test", 800, 800, "C:/projects/physicsSimulator/RealPhysicsMechanicEngine/resourses/images/a.png");
+	Ball ball1 = Ball(100, Vector2(1, 5), Vector2(100, 100), 1, Vector2(0, 0));
+	Ball arrayOfBalls[1];
+	arrayOfBalls[0] = ball1;
 
+	while (!graphics.isRuning()) //Engine is Runnig
+	{
+		graphics.Update(); // the same but called from engine it self
+		physics.update(arrayOfBalls, 1); // update engine should include graphics update and physics update
+		graphics.Render(arrayOfBalls, 1); // should be here but rather in t
 	}
 
 	return 0;

@@ -15,6 +15,8 @@ public:
 	double mag;
 	double dir;
 
+	//static const Vector2 ZeroVector = Vector2(0, 0);
+
 	// Constructor to initialize Vector2 object to a 2D Zero Vector
 	Vector2();
 

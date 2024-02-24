@@ -63,7 +63,7 @@ void GraphicsSystem::DrawCircle(int32_t centreX, int32_t centreY, int32_t radius
 
 void GraphicsSystem::DrawImage(int w, int h, Vector2 pos)
 {
-	SDL_Rect rect = { pos.x, pos.y, w, h };
+	SDL_Rect rect = {pos.x- w, pos.y- h, 2*w, 2*h };
 	SDL_RenderCopy(_window._renderer, _ballTexture, nullptr, &rect);
 }
 
@@ -72,13 +72,19 @@ void GraphicsSystem::Update()
 	_window.PollEvent();
 }
 
-void GraphicsSystem::Render(Ball arrayOfBalls[], int numberOfBalls)
+void GraphicsSystem::Render(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
 {
 	for (int i = 0; i < numberOfBalls; i++)
 	{
 		SDL_SetRenderDrawColor(_window._renderer, 255, 0, 255, 255);
 		DrawImage(arrayOfBalls[i]._radius, arrayOfBalls[i]._radius, arrayOfBalls[i]._physicsObject._pos);
-		//DrawCircle(arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y, arrayOfBalls[i]._radius);
+		DrawCircle(arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y, arrayOfBalls[i]._radius);
+	}
+
+	for (int i = 0; i < numberOfSprings; i++)
+	{
+		SDL_SetRenderDrawColor(_window._renderer, 255, 0, 0, 255);
+		DrawSpring(arrayOfSprings[i]._connectionPoint1->_pos, arrayOfSprings[i]._connectionPoint2->_pos);
 	}
 
 	SDL_SetRenderDrawColor(_window._renderer, 255, 255, 255, 255);
@@ -94,4 +100,9 @@ GraphicsSystem::~GraphicsSystem()
 GraphicsSystem::GraphicsSystem()
 {
 
+}
+
+void GraphicsSystem::DrawSpring(Vector2 point1, Vector2 point2)
+{
+	SDL_RenderDrawLineF(_window._renderer, point1.x, point1.y, point2.x, point2.y);
 }

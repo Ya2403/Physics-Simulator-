@@ -9,8 +9,13 @@ PhysicsEngine::~PhysicsEngine()
 
 }
 
-void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls)
+void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
 {
+	for (int i = 0; i < numberOfSprings; i++)
+	{
+		arrayOfSprings[i].Update();//should be the same for ball 
+	}
+
 	CheckForColitions(arrayOfBalls, numberOfBalls);
 	for (int i = 0; i < numberOfBalls; i++)
 	{
@@ -20,10 +25,16 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls)
 	//SDL_Delay(4);
 }
 
-void PhysicsEngine::Move(Ball arrayOfBalls[], int ballIxdex)
+void PhysicsEngine::Move(Ball arrayOfBalls[], int ballIxdex)//Should be remake to be Update physics object inside the physisc object
 {
-	int windowHight = 500;
-	int windowWidht = 500;
+	int windowHight = 800;
+	int windowWidht = 800;
+
+	arrayOfBalls[ballIxdex]._physicsObject._velocity = arrayOfBalls[ballIxdex]._physicsObject._velocity + arrayOfBalls[ballIxdex]._physicsObject._totalForce * (1.0/arrayOfBalls[ballIxdex]._physicsObject._mass)* delta_time;
+
+	//total_force should be now zero so that it wont summ up
+	arrayOfBalls[ballIxdex]._physicsObject._totalForce = arrayOfBalls[ballIxdex]._physicsObject._totalForce.zeroVector();
+
 
 	arrayOfBalls[ballIxdex]._physicsObject._pos = arrayOfBalls[ballIxdex]._physicsObject._pos+arrayOfBalls[ballIxdex]._physicsObject._velocity* delta_time;
 
@@ -64,8 +75,7 @@ void PhysicsEngine::Move(Ball arrayOfBalls[], int ballIxdex)
 		if (arrayOfBalls[ballIxdex]._physicsObject._velocity.y > 0)
 		{
 			arrayOfBalls[ballIxdex]._physicsObject._velocity.y *= -1.0;
-		}
-		
+		}	
 	}
 }
 

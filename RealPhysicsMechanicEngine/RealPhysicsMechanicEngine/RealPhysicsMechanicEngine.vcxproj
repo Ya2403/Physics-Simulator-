@@ -26,6 +26,7 @@
     <ClCompile Include="..\resourses\scripts\main.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsObject.cpp" />
+    <ClCompile Include="..\resourses\scripts\Spring.cpp" />
     <ClCompile Include="..\resourses\scripts\Vector2.cpp" />
     <ClCompile Include="..\resourses\scripts\Window.cpp" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <ClInclude Include="..\resourses\scripts\GraphicsSystem.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsObject.h" />
+    <ClInclude Include="..\resourses\scripts\Spring.h" />
     <ClInclude Include="..\resourses\scripts\Vector2.h" />
     <ClInclude Include="..\resourses\scripts\Window.h" />
   </ItemGroup>

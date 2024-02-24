@@ -5,13 +5,14 @@
 #include "iostream"
 #include <cstdlib>
 #include "Ball.h"
+#include "Spring.h"
 
 class PhysicsEngine
 {
 public:
 	PhysicsEngine();
 	~PhysicsEngine();
-	void update(Ball arrayOfBalls[], int numberOfBalls);
+	void update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings);
 	
 	void Move(Ball arrayOfBalls[], int ballIxdex);
 	bool CheckForColitions(Ball arrayOfBalls[], int numberOfBalls);
@@ -21,7 +22,8 @@ public:
 
 
 private:
-	double delta_time = 0.01;
+	double delta_time = 0.001;
 	bool isRuning;
 };
+
 

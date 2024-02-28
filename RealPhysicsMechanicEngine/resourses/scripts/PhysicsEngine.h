@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "Ball.h"
 #include "Spring.h"
+#include "SystemState.h"
 
 class PhysicsEngine
 {
@@ -13,8 +14,7 @@ public:
 	PhysicsEngine();
 	~PhysicsEngine();
 	void update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings);
-	
-	void Move(Ball arrayOfBalls[], int ballIxdex);
+
 	bool CheckForColitions(Ball arrayOfBalls[], int numberOfBalls);
 
 	void lenearInterpolation(int ballIndex, int bounderyX); //isn't yet a thing but in the near future should be

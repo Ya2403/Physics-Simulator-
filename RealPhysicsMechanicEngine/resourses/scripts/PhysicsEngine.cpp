@@ -11,79 +11,79 @@ PhysicsEngine::~PhysicsEngine()
 
 void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
 {
+	int energy = 0;
+	//check for colition
+	//CheckForColitions(arrayOfBalls, numberOfBalls);
+
+	
+	//Update System
+
+	Vector2 InitialPositions[1000];
+
 	for (int i = 0; i < numberOfSprings; i++)
 	{
 		arrayOfSprings[i].Update();//should be the same for ball 
 	}
 
-	CheckForColitions(arrayOfBalls, numberOfBalls);
 	for (int i = 0; i < numberOfBalls; i++)
 	{
-		Move(arrayOfBalls,i);
+		InitialPositions[i] = arrayOfBalls[i]._physicsObject._pos;
+		arrayOfBalls[i]._physicsObject.Update(delta_time/2);
 	}
-	//std::cout << borderX << std::endl;
+	//Ball are in the position of time+deltaTime/2
+	// Now we need to Update springs ones again so that we get forces on balls in time+deltaTime/2
+	for (int i = 0; i < numberOfSprings; i++)
+	{
+		arrayOfSprings[i].Update();//should be the same for ball 
+		energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos)- arrayOfSprings[i]._initianLenght, 2);
+	}
+
+	//SystemState InitialStatePlusHalfDeltaTime = SystemState(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
+
+	////for the midle point method
+	////simulate sistem with deltaTime/2 and then 
+	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfSprings; i++)
+	//{
+	//	InitialStatePlusHalfDeltaTime._arrayOfSprings[i].Update();//should be the same for ball 
+	//}
+
+	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfBalls; i++)
+	//{
+	//	InitialStatePlusHalfDeltaTime._arrayOfBalls[i]._physicsObject.Update(delta_time/2);
+	//}
+	////Ball are in the position of time+deltaTime/2
+	//// Now we need to Update springs ones again so that we get forces on balls in time+deltaTime/2
+	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfSprings; i++)
+	//{
+	//	InitialStatePlusHalfDeltaTime._arrayOfSprings[i].Update();//should be the same for ball 
+	//}
+
+	//simulate Initial State but with the total force of half state
+	for (int i = 1; i < numberOfBalls; i++)
+	{
+		arrayOfBalls[i]._physicsObject._pos = InitialPositions[i];
+		arrayOfBalls[i]._physicsObject.Update(delta_time);
+		energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
+		energy -= arrayOfBalls[i]._physicsObject._mass * 10 * arrayOfBalls[i]._physicsObject._pos.y;
+	}
+
+	std::cout << energy << std::endl;
+	
+	
+
+	
 	//SDL_Delay(4);
 }
 
-void PhysicsEngine::Move(Ball arrayOfBalls[], int ballIxdex)//Should be remake to be Update physics object inside the physisc object
-{
-	int windowHight = 800;
-	int windowWidht = 800;
-
-	arrayOfBalls[ballIxdex]._physicsObject._velocity = arrayOfBalls[ballIxdex]._physicsObject._velocity + arrayOfBalls[ballIxdex]._physicsObject._totalForce * (1.0/arrayOfBalls[ballIxdex]._physicsObject._mass)* delta_time;
-
-	//total_force should be now zero so that it wont summ up
-	arrayOfBalls[ballIxdex]._physicsObject._totalForce = arrayOfBalls[ballIxdex]._physicsObject._totalForce.zeroVector();
-
-
-	arrayOfBalls[ballIxdex]._physicsObject._pos = arrayOfBalls[ballIxdex]._physicsObject._pos+arrayOfBalls[ballIxdex]._physicsObject._velocity* delta_time;
-
-	if (arrayOfBalls[ballIxdex]._physicsObject._pos.x - arrayOfBalls[ballIxdex]._radius < 0)
-	{
-		arrayOfBalls[ballIxdex]._physicsObject._pos.x = 0 + arrayOfBalls[ballIxdex]._radius;
-		if (arrayOfBalls[ballIxdex]._physicsObject._velocity.x < 0)
-		{
-			
-			arrayOfBalls[ballIxdex]._physicsObject._velocity.x *= -1.0;
-			//arrayOfBalls[ballIxdex].vx += abs(amplitude * (cos(2 * 3.14 * curBorderTime / period)- cos(2 * 3.14 * curBorderTime-1/60.0 / period))*30.0);
-		}
-	}
-	else if (arrayOfBalls[ballIxdex]._physicsObject._pos.x + arrayOfBalls[ballIxdex]._radius > windowWidht)
-	{
-
-		arrayOfBalls[ballIxdex]._physicsObject._pos.x = windowWidht - arrayOfBalls[ballIxdex]._radius;
-		if (arrayOfBalls[ballIxdex]._physicsObject._velocity.x > 0)
-		{
-
-			arrayOfBalls[ballIxdex]._physicsObject._velocity.x *= -1.0;
-			//arrayOfBalls[ballIxdex].vx += abs(amplitude * (cos(2 * 3.14 * curBorderTime / period) - cos(2 * 3.14 * curBorderTime - 1 / 60.0 / period)) * 30.0);
-		}
-		
-	}
-
-	if (arrayOfBalls[ballIxdex]._physicsObject._pos.y - arrayOfBalls[ballIxdex]._radius < 0)
-	{
-		arrayOfBalls[ballIxdex]._physicsObject._pos.y = 0+ arrayOfBalls[ballIxdex]._radius;
-		if (arrayOfBalls[ballIxdex]._physicsObject._velocity.y < 0)
-		{
-			arrayOfBalls[ballIxdex]._physicsObject._velocity.y *= -1.0;
-		}
-	}
-	else if (arrayOfBalls[ballIxdex]._physicsObject._pos.y + arrayOfBalls[ballIxdex]._radius > windowHight)
-	{
-		arrayOfBalls[ballIxdex]._physicsObject._pos.y = windowHight - arrayOfBalls[ballIxdex]._radius;
-		if (arrayOfBalls[ballIxdex]._physicsObject._velocity.y > 0)
-		{
-			arrayOfBalls[ballIxdex]._physicsObject._velocity.y *= -1.0;
-		}	
-	}
-}
-
-
 bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 {
+	int windowHight = 1000;
+	int windowWidht = 1000;
+
+	 
 	for (int i = 0; i < numberOfBalls; i++)
 	{
+		//between balls collition
 		for (int j = i + 1; j < numberOfBalls; j++)
 		{
 			//std::cout << "colision" << std::endl;
@@ -95,7 +95,49 @@ bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 				
 			}
 		}
+
+		if (arrayOfBalls[i]._physicsObject._pos.x - arrayOfBalls[i]._radius < 0)
+		{
+			arrayOfBalls[i]._physicsObject._pos.x = 0 + arrayOfBalls[i]._radius;
+			if (arrayOfBalls[i]._physicsObject._velocity.x < 0)
+			{
+
+				arrayOfBalls[i]._physicsObject._velocity.x *= -1.0;
+				//arrayOfBalls[ballIxdex].vx += abs(amplitude * (cos(2 * 3.14 * curBorderTime / period)- cos(2 * 3.14 * curBorderTime-1/60.0 / period))*30.0);
+			}
+		}
+		else if (arrayOfBalls[i]._physicsObject._pos.x + arrayOfBalls[i]._radius > windowWidht)
+		{
+
+			arrayOfBalls[i]._physicsObject._pos.x = windowWidht - arrayOfBalls[i]._radius;
+			if (arrayOfBalls[i]._physicsObject._velocity.x > 0)
+			{
+
+				arrayOfBalls[i]._physicsObject._velocity.x *= -1.0;
+				//arrayOfBalls[ballIxdex].vx += abs(amplitude * (cos(2 * 3.14 * curBorderTime / period) - cos(2 * 3.14 * curBorderTime - 1 / 60.0 / period)) * 30.0);
+			}
+
+		}
+
+		if (arrayOfBalls[i]._physicsObject._pos.y - arrayOfBalls[i]._radius < 0)
+		{
+			arrayOfBalls[i]._physicsObject._pos.y = 0 + arrayOfBalls[i]._radius;
+			if (arrayOfBalls[i]._physicsObject._velocity.y < 0)
+			{
+				arrayOfBalls[i]._physicsObject._velocity.y *= -1.0;
+			}
+		}
+		else if (arrayOfBalls[i]._physicsObject._pos.y + arrayOfBalls[i]._radius > windowHight)
+		{
+			arrayOfBalls[i]._physicsObject._pos.y = windowHight - arrayOfBalls[i]._radius;
+			if (arrayOfBalls[i]._physicsObject._velocity.y > 0)
+			{
+				arrayOfBalls[i]._physicsObject._velocity.y *= -1.0;
+			}
+		}
 	}
+
+
 	return false;
 }
 

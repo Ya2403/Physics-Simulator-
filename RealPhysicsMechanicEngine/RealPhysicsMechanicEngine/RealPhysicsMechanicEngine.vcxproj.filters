@@ -45,6 +45,9 @@
     <ClCompile Include="..\resourses\scripts\Spring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\resourses\scripts\SystemState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Window.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\resourses\scripts\Spring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\SystemState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,3 +16,19 @@ void PhysicsObject::AddForce(Vector2 force)
 {
 	_totalForce = _totalForce + force;
 }
+
+void PhysicsObject::Update(double time_step)
+{
+	_velocity = _velocity + _totalForce * (1.0 /_mass) * time_step;
+	
+	_totalForce = _totalForce.zeroVector();//total_force should be now zero so that it wont summ up
+	_pos = _pos + _velocity * time_step;
+}
+
+void PhysicsObject::UpdateWithKnownForce(double time_step, Vector2 totaleForce)
+{
+	_velocity = _velocity + totaleForce * (1.0 / _mass) * time_step;
+
+	_totalForce = totaleForce.zeroVector();//total_force should be now zero so that it wont summ up
+	_pos = _pos + _velocity * time_step;
+}

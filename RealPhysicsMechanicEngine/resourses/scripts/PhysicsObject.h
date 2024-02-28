@@ -8,6 +8,9 @@ public:
 	PhysicsObject();
 	PhysicsObject(Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
 	void AddForce(Vector2 force);
+	void Update(double time_step);
+
+	void UpdateWithKnownForce(double time_step, Vector2 totaleForce); //stuff for the midl point method
 
 
 

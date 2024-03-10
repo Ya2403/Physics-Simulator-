@@ -15,7 +15,7 @@ public:
 	PhysicsObject* _connectionPoint1 = nullptr;
 	PhysicsObject* _connectionPoint2 = nullptr;
 
-	double _stiffness = 1;
+	double _stiffness = 1; //in Newtorn/meter
 	double _initianLenght = 1;
 };
 

@@ -11,10 +11,12 @@ public:
 	void Update(double time_step);
 
 	void UpdateWithKnownForce(double time_step, Vector2 totaleForce); //stuff for the midl point method
-
+//	void AddConnection(Spring& spring);
 
 
 public:
+	//Spring *_connectionsArray[100];
+	//int _numberOfConnections = 0;
 	double _angulareVelocity = 0;
 	Vector2 _velocity = _velocity.zeroVector(); //in m/s
 	Vector2 _pos = _pos.zeroVector(); //in meters

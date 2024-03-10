@@ -19,10 +19,11 @@ void PhysicsObject::AddForce(Vector2 force)
 
 void PhysicsObject::Update(double time_step)
 {
+	_pos = _pos + _velocity * time_step;
+
 	_velocity = _velocity + _totalForce * (1.0 /_mass) * time_step;
 	
 	_totalForce = _totalForce.zeroVector();//total_force should be now zero so that it wont summ up
-	_pos = _pos + _velocity * time_step;
 }
 
 void PhysicsObject::UpdateWithKnownForce(double time_step, Vector2 totaleForce)
@@ -32,3 +33,9 @@ void PhysicsObject::UpdateWithKnownForce(double time_step, Vector2 totaleForce)
 	_totalForce = totaleForce.zeroVector();//total_force should be now zero so that it wont summ up
 	_pos = _pos + _velocity * time_step;
 }
+
+//void PhysicsObject::AddConnection(Spring &spring)
+//{
+//	_connectionsArray[_numberOfConnections] = &spring;
+//	_numberOfConnections++;
+//}

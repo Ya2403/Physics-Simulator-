@@ -9,63 +9,84 @@ PhysicsEngine::~PhysicsEngine()
 
 }
 
-void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
+void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time)
 {
-	int energy = 0;
+	double energy = 0;
 	//check for colition
 	//CheckForColitions(arrayOfBalls, numberOfBalls);
 
-	
-	//Update System
-
-	Vector2 InitialPositions[1000];
-
-	for (int i = 0; i < numberOfSprings; i++)
+	Vector2 initialpos[1000];
+	Vector2 initialvel[1000];
+	//std::copy(arrayOfBalls, arrayOfBalls + numberOfBalls, newArrayOfBalls);
+	for (int j = 0; j < numberOfSprings; j++)
 	{
-		arrayOfSprings[i].Update();//should be the same for ball 
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+	for (int j = 1; j < numberOfBalls; j++)
+	{
+		arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+	}
+
+	//physics object has v and f for t=t0
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		initialpos[i] = arrayOfBalls[i]._physicsObject._pos;
+		initialvel[i] = arrayOfBalls[i]._physicsObject._velocity; //saving initial position and velosity
+		arrayOfBalls[i]._physicsObject._velocity = arrayOfBalls[i]._physicsObject._velocity + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass)* (delta_time / 2); //now v is for t0+dt/2
+		arrayOfBalls[i]._physicsObject._pos = arrayOfBalls[i]._physicsObject._pos + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2);
+
+		arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector();
+	}
+
+	//physics object have v for t0+delta/2 
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+	for (int j = 1; j < numberOfBalls; j++)
+	{
+		arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+	}
+	//physics object have v for t0+delta/2 
+
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		arrayOfBalls[i]._physicsObject._pos = initialpos[i];
+		//initialvel[i] = arrayOfBalls[i]._physicsObject._velocity;
 	}
 
 	for (int i = 0; i < numberOfBalls; i++)
 	{
-		InitialPositions[i] = arrayOfBalls[i]._physicsObject._pos;
-		arrayOfBalls[i]._physicsObject.Update(delta_time/2);
+		arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * delta_time; //pos in meter cos one pixel = 1 meter
+		arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * delta_time; // velocity in meter/sec
+		arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
 	}
-	//Ball are in the position of time+deltaTime/2
-	// Now we need to Update springs ones again so that we get forces on balls in time+deltaTime/2
-	for (int i = 0; i < numberOfSprings; i++)
+
+	curr_Time += delta_time;
+
+	if (arrayOfBalls[1]._physicsObject._velocity.getMag() < 1)
 	{
-		arrayOfSprings[i].Update();//should be the same for ball 
-		energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos)- arrayOfSprings[i]._initianLenght, 2);
+		std::cout << curr_Time << std::endl;
 	}
 
-	//SystemState InitialStatePlusHalfDeltaTime = SystemState(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
 
-	////for the midle point method
-	////simulate sistem with deltaTime/2 and then 
-	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfSprings; i++)
-	//{
-	//	InitialStatePlusHalfDeltaTime._arrayOfSprings[i].Update();//should be the same for ball 
-	//}
 
-	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfBalls; i++)
-	//{
-	//	InitialStatePlusHalfDeltaTime._arrayOfBalls[i]._physicsObject.Update(delta_time/2);
-	//}
-	////Ball are in the position of time+deltaTime/2
-	//// Now we need to Update springs ones again so that we get forces on balls in time+deltaTime/2
-	//for (int i = 0; i < InitialStatePlusHalfDeltaTime._numberOfSprings; i++)
-	//{
-	//	InitialStatePlusHalfDeltaTime._arrayOfSprings[i].Update();//should be the same for ball 
-	//}
-
-	//simulate Initial State but with the total force of half state
-	for (int i = 1; i < numberOfBalls; i++)
+	for (int i = 0; i < numberOfBalls; i++)
 	{
-		arrayOfBalls[i]._physicsObject._pos = InitialPositions[i];
-		arrayOfBalls[i]._physicsObject.Update(delta_time);
-		energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
-		energy -= arrayOfBalls[i]._physicsObject._mass * 10 * arrayOfBalls[i]._physicsObject._pos.y;
+		if (i >0)
+		{
+			energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
+			energy += -2 * arrayOfBalls[i]._physicsObject._mass * gravity * arrayOfBalls[i]._physicsObject._pos.y;
+		}
 	}
+
+	//for (int i = 0; i < numberOfSprings; i++)
+	//{
+	//	energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos) - arrayOfSprings[i]._initianLenght, 2);
+	//}
+
 
 	std::cout << energy << std::endl;
 	

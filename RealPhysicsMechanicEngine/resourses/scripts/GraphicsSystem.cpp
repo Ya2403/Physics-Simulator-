@@ -77,8 +77,9 @@ void GraphicsSystem::Render(Ball arrayOfBalls[], int numberOfBalls, Spring array
 	for (int i = 0; i < numberOfBalls; i++)
 	{
 		SDL_SetRenderDrawColor(_window._renderer, 255, 0, 255, 255);
-		DrawImage(arrayOfBalls[i]._radius, arrayOfBalls[i]._radius, arrayOfBalls[i]._physicsObject._pos);
+		//DrawImage(arrayOfBalls[i]._radius, arrayOfBalls[i]._radius, arrayOfBalls[i]._physicsObject._pos);
 		DrawCircle(arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y, arrayOfBalls[i]._radius);
+		SDL_RenderDrawPoint(_window._renderer, arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y);
 	}
 
 	for (int i = 0; i < numberOfSprings; i++)

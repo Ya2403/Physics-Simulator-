@@ -6,7 +6,7 @@ class PhysicsObject
 {
 public:
 	PhysicsObject();
-	PhysicsObject(Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
+	PhysicsObject(Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce, bool isFixedPoint);
 	void AddForce(Vector2 force);
 	void Update(double time_step);
 
@@ -22,4 +22,5 @@ public:
 	Vector2 _pos = _pos.zeroVector(); //in meters
 	double _mass = 1; //in kg
 	Vector2 _totalForce = _totalForce.zeroVector(); //in N
+	bool _isFixedPoint = false;
 };

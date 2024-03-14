@@ -28,7 +28,7 @@ private:
 	//double delta_time = 0.01;
 	int scale = 1 / 100; //1 meter = 100 picels
 	double curr_Time = 0;
-	double gravity = 10;
+	double gravity = 400;
 	bool isRuning;
 };
 

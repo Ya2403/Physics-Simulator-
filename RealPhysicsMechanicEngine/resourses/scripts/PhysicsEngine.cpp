@@ -13,7 +13,7 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayO
 {
 	double energy = 0;
 	//check for colition
-	//CheckForColitions(arrayOfBalls, numberOfBalls);
+	CheckForColitions(arrayOfBalls, numberOfBalls);
 
 	Vector2 initialpos[1000];
 	Vector2 initialvel[1000];
@@ -23,20 +23,36 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayO
 		arrayOfSprings[j].Update();//update connected springs
 	}
 
-	for (int j = 1; j < numberOfBalls; j++)
+
+	for (int j = 0; j < numberOfBalls; j++)
 	{
-		arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass)); //gravity
+			arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
 	}
 
 	//physics object has v and f for t=t0
 	for (int i = 0; i < numberOfBalls; i++)
 	{
-		initialpos[i] = arrayOfBalls[i]._physicsObject._pos;
-		initialvel[i] = arrayOfBalls[i]._physicsObject._velocity; //saving initial position and velosity
-		arrayOfBalls[i]._physicsObject._velocity = arrayOfBalls[i]._physicsObject._velocity + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass)* (delta_time / 2); //now v is for t0+dt/2
-		arrayOfBalls[i]._physicsObject._pos = arrayOfBalls[i]._physicsObject._pos + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2);
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			initialpos[i] = arrayOfBalls[i]._physicsObject._pos;
+			initialvel[i] = arrayOfBalls[i]._physicsObject._velocity; //saving initial position and velosity
 
-		arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector();
+			arrayOfBalls[i]._physicsObject._velocity = arrayOfBalls[i]._physicsObject._velocity + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time / 2); //now v is for t0+dt/2
+			arrayOfBalls[i]._physicsObject._pos = arrayOfBalls[i]._physicsObject._pos + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2);
+
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector();
+		}
+		
+		
+
+		
+		
+
+		
 	}
 
 	//physics object have v for t0+delta/2 
@@ -45,41 +61,41 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayO
 		arrayOfSprings[j].Update();//update connected springs
 	}
 
-	for (int j = 1; j < numberOfBalls; j++)
+	for (int j = 0; j < numberOfBalls; j++)
 	{
-		arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+			arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
 	}
 	//physics object have v for t0+delta/2 
 
 	for (int i = 0; i < numberOfBalls; i++)
 	{
-		arrayOfBalls[i]._physicsObject._pos = initialpos[i];
-		//initialvel[i] = arrayOfBalls[i]._physicsObject._velocity;
-	}
-
-	for (int i = 0; i < numberOfBalls; i++)
-	{
-		arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * delta_time; //pos in meter cos one pixel = 1 meter
-		arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * delta_time; // velocity in meter/sec
-		arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * delta_time; //pos in meter cos one pixel = 1 meter
+			arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * delta_time; // velocity in meter/sec
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
+		}
 	}
 
 	curr_Time += delta_time;
 
 	if (arrayOfBalls[1]._physicsObject._velocity.getMag() < 1)
 	{
-		std::cout << curr_Time << std::endl;
+		//std::cout << curr_Time << std::endl;
 	}
 
 
 
-	for (int i = 0; i < numberOfBalls; i++)
+	for (int i = 1; i < numberOfBalls; i++)
 	{
-		if (i >0)
-		{
+		
 			energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
 			energy += -2 * arrayOfBalls[i]._physicsObject._mass * gravity * arrayOfBalls[i]._physicsObject._pos.y;
-		}
+		
 	}
 
 	//for (int i = 0; i < numberOfSprings; i++)
@@ -98,7 +114,7 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayO
 
 bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 {
-	int windowHight = 1000;
+	int windowHight = 800;
 	int windowWidht = 1000;
 
 	 
@@ -164,27 +180,82 @@ bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 
 void PhysicsEngine::ProcessColition(Ball  &ball1, Ball &ball2)
 {
-	Vector2 centerOfgravityVelocity = Vector2(-(ball1._physicsObject._mass * ball1._physicsObject._velocity.x + ball2._physicsObject._mass * ball2._physicsObject._velocity.x) / (ball1._physicsObject._mass + ball2._physicsObject._mass), -(ball1._physicsObject._mass * ball1._physicsObject._velocity.y + ball2._physicsObject._mass * ball2._physicsObject._velocity.y) / (ball1._physicsObject._mass + ball2._physicsObject._mass));
-	Vector2 centersDirVec = ((ball1._physicsObject._pos - ball2._physicsObject._pos));
-	centersDirVec.normalizeVector();
-	Vector2 CopycentersDirVec = centersDirVec;
-	centersDirVec.normalizeVector();
-	Vector2 ball1VelInMref = ball1._physicsObject._velocity + centerOfgravityVelocity;
-	Vector2 ball2VelInMref = ball2._physicsObject._velocity + centerOfgravityVelocity;
-
-	ball1VelInMref = ball1VelInMref - (centersDirVec*(centersDirVec * ball1VelInMref))*2.0;
-	ball2VelInMref = ball2VelInMref - (centersDirVec * (centersDirVec * ball2VelInMref))*2.0;
-
-	ball1._physicsObject._velocity = ball1VelInMref - centerOfgravityVelocity;
-	
-	ball2._physicsObject._velocity = ball2VelInMref - centerOfgravityVelocity;
-
-	double distance = ball1._physicsObject._pos.Distance(ball2._physicsObject._pos) - (ball1._radius + ball2._radius);
-	if (distance<0)// && abs(distance)>(ball1._radius + ball2._radius)/30.0)
+	if (ball1._physicsObject._isFixedPoint)
 	{
-		ball1._physicsObject._pos = ball1._physicsObject._pos - CopycentersDirVec * (distance * ball2._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
-		ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance * ball1._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+		Vector2 centerOfgravityVelocity = centerOfgravityVelocity.zeroVector();// ball1._physicsObject._velocity * -1;//or hero mayby zero is better
+		Vector2 centersDirVec = ((ball1._physicsObject._pos - ball2._physicsObject._pos));
+		centersDirVec.normalizeVector();
+		Vector2 CopycentersDirVec = centersDirVec;
+
+		//Vector2 ball1VelInMref = ball1._physicsObject._velocity + centerOfgravityVelocity;
+		Vector2 ball2VelInMref = ball2._physicsObject._velocity + centerOfgravityVelocity;
+
+		//ball1VelInMref = ball1VelInMref - (centersDirVec * (centersDirVec * ball1VelInMref)) * 2.0;
+		ball2VelInMref = ball2VelInMref - (centersDirVec * (centersDirVec * ball2VelInMref)) * 2.0;
+
+		ball1._physicsObject._velocity = ball1._physicsObject._velocity.zeroVector();
+
+		ball2._physicsObject._velocity = ball2VelInMref - centerOfgravityVelocity;
+
+		double distance = ball1._physicsObject._pos.Distance(ball2._physicsObject._pos) - (ball1._radius + ball2._radius);
+
+		if (distance < 0)// && abs(distance)>(ball1._radius + ball2._radius)/30.0)
+		{
+			ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance);
+		}
 	}
+	else if (ball2._physicsObject._isFixedPoint)
+	{
+		Vector2 centerOfgravityVelocity = Vector2(0,0);
+		Vector2 centersDirVec = ((ball1._physicsObject._pos - ball2._physicsObject._pos));
+		centersDirVec.normalizeVector();
+		Vector2 CopycentersDirVec = centersDirVec;
+		centersDirVec.normalizeVector();
+		Vector2 ball1VelInMref = ball1._physicsObject._velocity + centerOfgravityVelocity;
+
+		ball1VelInMref = ball1VelInMref - (centersDirVec * (centersDirVec * ball1VelInMref)) * 2.0;
+
+		ball1._physicsObject._velocity = ball1VelInMref - centerOfgravityVelocity;
+
+		ball2._physicsObject._velocity = Vector2(0,0);
+
+		double distance = ball1._physicsObject._pos.Distance(ball2._physicsObject._pos) - (ball1._radius + ball2._radius);
+		if (distance < 0)// && abs(distance)>(ball1._radius + ball2._radius)/30.0)
+		{
+			ball1._physicsObject._pos = ball1._physicsObject._pos - CopycentersDirVec * (distance);
+		}
+	}
+	else
+	{
+		Vector2 centerOfgravityVelocity = Vector2(-(ball1._physicsObject._mass * ball1._physicsObject._velocity.x + ball2._physicsObject._mass * ball2._physicsObject._velocity.x) / (ball1._physicsObject._mass + ball2._physicsObject._mass), -(ball1._physicsObject._mass * ball1._physicsObject._velocity.y + ball2._physicsObject._mass * ball2._physicsObject._velocity.y) / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+		Vector2 centersDirVec = ((ball1._physicsObject._pos - ball2._physicsObject._pos));
+		centersDirVec.normalizeVector();
+		Vector2 CopycentersDirVec = centersDirVec;
+		centersDirVec.normalizeVector();
+		Vector2 ball1VelInMref = ball1._physicsObject._velocity + centerOfgravityVelocity;
+		Vector2 ball2VelInMref = ball2._physicsObject._velocity + centerOfgravityVelocity;
+
+		ball1VelInMref = ball1VelInMref - (centersDirVec * (centersDirVec * ball1VelInMref)) * 2.0;
+		ball2VelInMref = ball2VelInMref - (centersDirVec * (centersDirVec * ball2VelInMref)) * 2.0;
+
+		ball1._physicsObject._velocity = ball1VelInMref - centerOfgravityVelocity;
+
+		ball2._physicsObject._velocity = ball2VelInMref - centerOfgravityVelocity;
+
+		double distance = ball1._physicsObject._pos.Distance(ball2._physicsObject._pos) - (ball1._radius + ball2._radius);
+		if (distance < 0)// && abs(distance)>(ball1._radius + ball2._radius)/30.0)
+		{
+			ball1._physicsObject._pos = ball1._physicsObject._pos - CopycentersDirVec * (distance * ball2._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+			ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance * ball1._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+		}
+	}
+	
+	
+		/*else
+		{
+			ball1._physicsObject._pos = ball1._physicsObject._pos - CopycentersDirVec * (distance * ball2._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+			ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance * ball1._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
+		}*/
 }
 
 //void Game::lenearInterpolation(int ballIndex, int bounderyX)

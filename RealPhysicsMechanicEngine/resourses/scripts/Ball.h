@@ -7,7 +7,7 @@
 class Ball
 {
 public:
-	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce);
+	Ball(int Radius, Vector2 Velocity, Vector2 Pos, double Mass, Vector2 totalForce, bool isFixedPoint);
 	Ball();
 
 public:

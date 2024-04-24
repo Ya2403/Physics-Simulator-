@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include <SDL_image.h>
-#include "SDL.h"
+//#include <SDL_image.h>
+//#include "SDL.h"
 
 class Window
 {
@@ -19,8 +19,8 @@ private:
 	bool init();
 	
 public:
-	SDL_Window* _window = nullptr;
-	SDL_Renderer* _renderer = nullptr;
+	//SDL_Window* _window = nullptr;
+	//SDL_Renderer* _renderer = nullptr;
 
 private:
 	std::string _title;

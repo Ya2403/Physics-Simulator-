@@ -22,26 +22,26 @@
     <ClCompile Include="..\resourses\scripts\Ball.cpp" />
     <ClCompile Include="..\resourses\scripts\Engine.cpp" />
     <ClCompile Include="..\resourses\scripts\ForceGenerator.cpp" />
-    <ClCompile Include="..\resourses\scripts\GraphicsSystem.cpp" />
+    <ClCompile Include="..\resourses\scripts\LinearConstraint.cpp" />
     <ClCompile Include="..\resourses\scripts\main.cpp" />
+    <ClCompile Include="..\resourses\scripts\matrix.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsObject.cpp" />
     <ClCompile Include="..\resourses\scripts\Spring.cpp" />
     <ClCompile Include="..\resourses\scripts\SystemState.cpp" />
     <ClCompile Include="..\resourses\scripts\Vector2.cpp" />
-    <ClCompile Include="..\resourses\scripts\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Ball.h" />
     <ClInclude Include="..\resourses\scripts\Engine.h" />
     <ClInclude Include="..\resourses\scripts\ForceGenerator.h" />
-    <ClInclude Include="..\resourses\scripts\GraphicsSystem.h" />
+    <ClInclude Include="..\resourses\scripts\LinearConstraint.h" />
+    <ClInclude Include="..\resourses\scripts\matrix.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsObject.h" />
     <ClInclude Include="..\resourses\scripts\Spring.h" />
     <ClInclude Include="..\resourses\scripts\SystemState.h" />
     <ClInclude Include="..\resourses\scripts\Vector2.h" />
-    <ClInclude Include="..\resourses\scripts\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -148,6 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector2.h"
-#include "SDL.h"
+
 
 class PhysicsObject
 {

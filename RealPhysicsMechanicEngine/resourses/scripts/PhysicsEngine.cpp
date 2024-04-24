@@ -13,103 +13,10 @@ void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayO
 {
 	double energy = 0;
 	//check for colition
-	CheckForColitions(arrayOfBalls, numberOfBalls);
+	//CheckForColitions(arrayOfBalls, numberOfBalls);
 
-	Vector2 initialpos[1000];
-	Vector2 initialvel[1000];
-	//std::copy(arrayOfBalls, arrayOfBalls + numberOfBalls, newArrayOfBalls);
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
-
-
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass)); //gravity
-			arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
-
-	//physics object has v and f for t=t0
-	for (int i = 0; i < numberOfBalls; i++)
-	{
-		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
-		{
-			initialpos[i] = arrayOfBalls[i]._physicsObject._pos;
-			initialvel[i] = arrayOfBalls[i]._physicsObject._velocity; //saving initial position and velosity
-
-			arrayOfBalls[i]._physicsObject._velocity = arrayOfBalls[i]._physicsObject._velocity + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time / 2); //now v is for t0+dt/2
-			arrayOfBalls[i]._physicsObject._pos = arrayOfBalls[i]._physicsObject._pos + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2);
-
-			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector();
-		}
-		
-		
-
-		
-		
-
-		
-	}
-
-	//physics object have v for t0+delta/2 
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
-
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
-			arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
-	//physics object have v for t0+delta/2 
-
-	for (int i = 0; i < numberOfBalls; i++)
-	{
-		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * delta_time; //pos in meter cos one pixel = 1 meter
-			arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * delta_time; // velocity in meter/sec
-			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
-		}
-	}
-
-	curr_Time += delta_time;
-
-	if (arrayOfBalls[1]._physicsObject._velocity.getMag() < 1)
-	{
-		//std::cout << curr_Time << std::endl;
-	}
-
-
-
-	for (int i = 1; i < numberOfBalls; i++)
-	{
-		
-			energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
-			energy += -2 * arrayOfBalls[i]._physicsObject._mass * gravity * arrayOfBalls[i]._physicsObject._pos.y;
-		
-	}
-
-	//for (int i = 0; i < numberOfSprings; i++)
-	//{
-	//	energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos) - arrayOfSprings[i]._initianLenght, 2);
-	//}
-
-
-	std::cout << energy << std::endl;
+	RungeKuttaStep(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings, delta_time);
 	
-	
-
-	
-	//SDL_Delay(4);
 }
 
 bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
@@ -176,6 +83,144 @@ bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
 
 
 	return false;
+}
+
+void PhysicsEngine::RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time)
+{
+	Vector2 initialpos[1000];
+	Vector2 initialvel[1000];
+
+
+	Vector2 k1Vel[1000];
+	Vector2 k1force[1000];
+
+	Vector2 k2Vel[1000];
+	Vector2 k2force[1000];
+
+	Vector2 k3Vel[1000];
+	Vector2 k3force[1000];
+
+	Vector2 k4Vel[1000];
+	Vector2 k4force[1000];
+
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+
+	for (int j = 0; j < numberOfBalls; j++)
+	{
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass)); //gravity
+			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
+	}
+
+	//physics object has v and f for t=t0
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			initialpos[i] = arrayOfBalls[i]._physicsObject._pos;
+			initialvel[i] = arrayOfBalls[i]._physicsObject._velocity; //saving initial position and velosity
+
+			k1force[i] = arrayOfBalls[i]._physicsObject._totalForce;
+			k1Vel[i] = arrayOfBalls[i]._physicsObject._velocity;
+
+			arrayOfBalls[i]._physicsObject._velocity = arrayOfBalls[i]._physicsObject._velocity + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time / 2); //now v is for t0+dt/2
+			arrayOfBalls[i]._physicsObject._pos = arrayOfBalls[i]._physicsObject._pos + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2);
+
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector();
+		}
+	}
+
+	//physics object have v for t0+delta/2 
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+	for (int j = 0; j < numberOfBalls; j++)
+	{
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
+	}
+	//physics object have v for t0+delta/2 
+
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			k2force[i] = arrayOfBalls[i]._physicsObject._totalForce;
+			k2Vel[i] = arrayOfBalls[i]._physicsObject._velocity;
+
+			arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * (delta_time / 2); //pos in meter cos one pixel = 1 meter
+			arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time / 2); // velocity in meter/sec
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
+		}
+	}
+
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+	for (int j = 0; j < numberOfBalls; j++)
+	{
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
+	}
+	//physics object have v for t0+delta/2 
+
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			k3force[i] = arrayOfBalls[i]._physicsObject._totalForce;
+			k3Vel[i] = arrayOfBalls[i]._physicsObject._velocity;
+
+			arrayOfBalls[i]._physicsObject._pos = initialpos[i] + arrayOfBalls[i]._physicsObject._velocity * (delta_time); //pos in meter cos one pixel = 1 meter
+			arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + arrayOfBalls[i]._physicsObject._totalForce * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time); // velocity in meter/sec
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
+		}
+	}
+
+
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+	for (int j = 0; j < numberOfBalls; j++)
+	{
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
+			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
+	}
+	//physics object have v for t0+delta/2 
+
+	for (int i = 0; i < numberOfBalls; i++)
+	{
+		if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+		{
+			k4force[i] = arrayOfBalls[i]._physicsObject._totalForce;
+			k4Vel[i] = arrayOfBalls[i]._physicsObject._velocity;
+
+			arrayOfBalls[i]._physicsObject._pos = initialpos[i] + (k1Vel[i] + k2Vel[i] * 2 + k3Vel[i] * 2 + k4Vel[i]) * (delta_time / 6); //pos in meter cos one pixel = 1 meter
+			arrayOfBalls[i]._physicsObject._velocity = initialvel[i] + (k1force[i] + k2force[i] * 2 + k3force[i] * 2 + k4force[i]) * (1.0 / arrayOfBalls[i]._physicsObject._mass) * (delta_time / 6); // velocity in meter/sec
+			arrayOfBalls[i]._physicsObject._totalForce = arrayOfBalls[i]._physicsObject._totalForce.zeroVector(); //force in kg*miter/s^2
+		}
+	}
 }
 
 void PhysicsEngine::ProcessColition(Ball  &ball1, Ball &ball2)
@@ -257,8 +302,3 @@ void PhysicsEngine::ProcessColition(Ball  &ball1, Ball &ball2)
 			ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance * ball1._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
 		}*/
 }
-
-//void Game::lenearInterpolation(int ballIndex, int bounderyX)
-//{
-//	if(arrayOfBalls[ballIndex].x + arrayOfBalls[ballIndex].vx < bounderyX)
-//}

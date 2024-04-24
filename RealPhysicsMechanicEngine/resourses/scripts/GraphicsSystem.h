@@ -2,7 +2,7 @@
 #include "Window.h"
 #include <string>
 #include "Ball.h"
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include "Spring.h"
 class GraphicsSystem {
 public:
@@ -21,6 +21,6 @@ public:
 
 private:
 	Window _window;
-	SDL_Texture *_ballTexture = nullptr;
+//	SDL_Texture *_ballTexture = nullptr;
 
 };

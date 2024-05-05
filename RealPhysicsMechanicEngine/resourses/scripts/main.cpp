@@ -7,9 +7,9 @@
 
 const double pi = 3.14159265358979323846;
 
-double CalculateTeta(Ball arrayOfBalls[], double previousTeta)
+double CalculateTeta(Ball arrayOfBalls[], double previousTeta, int firstBallIndex, int secondBallIndex)
 {
-	Vector2 vect12 = arrayOfBalls[2]._physicsObject._pos - arrayOfBalls[1]._physicsObject._pos;
+	Vector2 vect12 = arrayOfBalls[secondBallIndex]._physicsObject._pos - arrayOfBalls[firstBallIndex]._physicsObject._pos;
 	vect12.normalizeVector();
 	double teta;
 	int prevZone = int(abs(trunc(previousTeta/pi))) % 2;
@@ -20,7 +20,7 @@ double CalculateTeta(Ball arrayOfBalls[], double previousTeta)
 	int currZone;
 	int currZone4;
 
-	if (arrayOfBalls[1]._physicsObject._pos.x >= arrayOfBalls[2]._physicsObject._pos.x)
+	if (arrayOfBalls[firstBallIndex]._physicsObject._pos.x >= arrayOfBalls[secondBallIndex]._physicsObject._pos.x)
 	{
 		teta = -acos(-(vect12 * Vector2(0, 1)) / vect12.getMag());
 		currZone = 1;
@@ -88,22 +88,25 @@ int main(int argc, char* argv[])
 	PhysicsEngine physics = PhysicsEngine();
 	Ball arrayOfBalls[20];
 	Spring arrayOfSprings[10];
-	int numOfBall = 3;
-	int numOfSpring = 2;
+	LinearConstraint arrayOfConstraints[10];
+	int numberOfConstraints = 1;
+	int numOfBall = 2;
+	int numOfSpring = 1;
 	int windowHight = 800;
 	int windowWidht = 800;
 
 
 	arrayOfBalls[0] = Ball(45, Vector2(0, 0), Vector2(0, 0), 1, Vector2(0, 0), true);
-	arrayOfBalls[1] = Ball(45, Vector2(0, 0), Vector2(100,0), 1, Vector2(0, 0), false);
-	arrayOfBalls[2] = Ball(45, Vector2(0, 0), Vector2(200,0), 1, Vector2(0, 0), false);
+	arrayOfBalls[1] = Ball(45, Vector2(0, 0), Vector2(0,-100), 1, Vector2(0, 0), false);
+	//arrayOfBalls[2] = Ball(45, Vector2(0, 0), Vector2(200,0), 1, Vector2(0, 0), false);
 	
+	arrayOfConstraints[0] = LinearConstraint(arrayOfBalls[0]._physicsObject, arrayOfBalls[1]._physicsObject, 0, 1, 100);
 
 
 	arrayOfSprings[0] = Spring(arrayOfBalls[0]._physicsObject, arrayOfBalls[1]._physicsObject, 1000000);
-	arrayOfSprings[1] = Spring(arrayOfBalls[1]._physicsObject, arrayOfBalls[2]._physicsObject, 1000000);
+	//arrayOfSprings[1] = Spring(arrayOfBalls[1]._physicsObject, arrayOfBalls[2]._physicsObject, 1000000);
 
-	double deltaTime = 0.00001;
+	double deltaTime = 0.0001;
 	double currentTime = 0;
 	double writeinFileDeltaTime = 0.001;
 	double currFileTime = 0;
@@ -111,7 +114,7 @@ int main(int argc, char* argv[])
 	double energy = 0;
 	double gravity = -400;
 
-	int ballIndex = 2;
+	int ballIndex = 1;
 	ofstream textFile;
 	textFile.open("example.txt");
 
@@ -126,30 +129,34 @@ int main(int argc, char* argv[])
 	{
 		energy = 0;
 		energy2 = 0;
+
 		for (int i = 1; i < numOfBall; i++)
 		{
-			energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
-			energy += -2 * arrayOfBalls[i]._physicsObject._mass * gravity * arrayOfBalls[i]._physicsObject._pos.y;
+			if (!arrayOfBalls[i]._physicsObject._isFixedPoint)
+			{
+				energy += arrayOfBalls[i]._physicsObject._mass * pow(arrayOfBalls[i]._physicsObject._velocity.getMag(), 2);
+				energy += -2 * arrayOfBalls[i]._physicsObject._mass * gravity * arrayOfBalls[i]._physicsObject._pos.y;
+			}
+			
 		}
-		energy2 = energy;
 
-		for (int i = 0; i < numOfSpring; i++)
+		/*for (int i = 0; i < numOfSpring; i++)
 		{
 			energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos) - arrayOfSprings[i]._initianLenght, 2);
-		}
+		}*/
 		
-		teta = CalculateTeta(arrayOfBalls, prevteta);
+		/*teta = CalculateTeta(arrayOfBalls, prevteta, ballIndex -1, ballIndex);
 		
-		velociyOmega1 = (teta - prevteta) / deltaTime;
+		velociyOmega1 = (teta - prevteta) / deltaTime;*/
 		
-		physics.update(arrayOfBalls, numOfBall, arrayOfSprings, numOfSpring, deltaTime); // update engine should include graphics update and physics update
+		physics.update(arrayOfBalls, numOfBall, arrayOfSprings, numOfSpring, deltaTime, arrayOfConstraints, numberOfConstraints); // update engine should include graphics update and physics update
 
-		if (currFileTime >= writeinFileDeltaTime)
+		/*if (currFileTime >= writeinFileDeltaTime)
 		{
 			
-			textFile << currentTime << " " << arrayOfBalls[ballIndex]._physicsObject._pos.x << " " << arrayOfBalls[ballIndex]._physicsObject._pos.y << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.x << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.y << " " << teta <<" "<< velociyOmega1 <<" " << energy <<" "<<energy2 << "\n";
+			textFile << currentTime << " " << arrayOfBalls[ballIndex]._physicsObject._pos.x << " " << arrayOfBalls[ballIndex]._physicsObject._pos.y << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.x << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.y << " " << teta <<" "<< velociyOmega1 <<" " << energy << "\n";
 			currFileTime = 0;
-		}
+		}*/
 
 		currentTime += deltaTime;
 		currFileTime += deltaTime;

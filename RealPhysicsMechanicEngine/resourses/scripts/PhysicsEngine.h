@@ -6,6 +6,9 @@
 #include "Ball.h"
 #include "Spring.h"
 #include "SystemState.h"
+#include "matrix.h"
+#include "LinearConstraint.h"
+
 
 
 using namespace std;
@@ -15,14 +18,17 @@ class PhysicsEngine
 public:
 	PhysicsEngine();
 	~PhysicsEngine();
-	void update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time);
+	void update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time, LinearConstraint arrayOfConstraint[], int numberOfConstraints);
 
 	void RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time);
+	
+	void CalculateForces(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings);
 	
 	bool CheckForColitions(Ball arrayOfBalls[], int numberOfBalls);
 
 	void lenearInterpolation(int ballIndex, int bounderyX); //isn't yet a thing but in the near future should be
 	void ProcessColition(Ball &ball1, Ball &ball2);
+	Matrix CalculateConstrainForces(Ball arrayOfBalls[], int numberOfBalls, LinearConstraint arrayOfConstraints[], int numberOfConstrtain);
 
 
 private:

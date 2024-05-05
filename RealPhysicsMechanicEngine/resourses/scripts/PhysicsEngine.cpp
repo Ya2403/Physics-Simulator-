@@ -9,14 +9,33 @@ PhysicsEngine::~PhysicsEngine()
 
 }
 
-void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time)
+void PhysicsEngine::update(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings, double delta_time, LinearConstraint arrayOfConstraints[], int numberOfConstraints)
 {
 	double energy = 0;
 	//check for colition
 	//CheckForColitions(arrayOfBalls, numberOfBalls);
 
 	RungeKuttaStep(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings, delta_time);
+	CalculateConstrainForces(arrayOfBalls, numberOfBalls, arrayOfConstraints, numberOfConstraints);
 	
+}
+
+void PhysicsEngine::CalculateForces(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
+{
+	for (int j = 0; j < numberOfSprings; j++)
+	{
+		arrayOfSprings[j].Update();//update connected springs
+	}
+
+
+	for (int j = 0; j < numberOfBalls; j++)
+	{
+		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
+		{
+			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass)); //gravity
+			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
+		}
+	}
 }
 
 bool PhysicsEngine::CheckForColitions(Ball arrayOfBalls[], int numberOfBalls )
@@ -103,20 +122,7 @@ void PhysicsEngine::RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Sprin
 	Vector2 k4Vel[1000];
 	Vector2 k4force[1000];
 
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
-
-
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass)); //gravity
-			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
+	CalculateForces(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
 
 	//physics object has v and f for t=t0
 	for (int i = 0; i < numberOfBalls; i++)
@@ -137,19 +143,7 @@ void PhysicsEngine::RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Sprin
 	}
 
 	//physics object have v for t0+delta/2 
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
-
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
-			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
+	CalculateForces(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
 	//physics object have v for t0+delta/2 
 
 	for (int i = 0; i < numberOfBalls; i++)
@@ -165,19 +159,8 @@ void PhysicsEngine::RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Sprin
 		}
 	}
 
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
+	CalculateForces(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
 
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
-			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
 	//physics object have v for t0+delta/2 
 
 	for (int i = 0; i < numberOfBalls; i++)
@@ -194,19 +177,8 @@ void PhysicsEngine::RungeKuttaStep(Ball arrayOfBalls[], int numberOfBalls, Sprin
 	}
 
 
-	for (int j = 0; j < numberOfSprings; j++)
-	{
-		arrayOfSprings[j].Update();//update connected springs
-	}
+	CalculateForces(arrayOfBalls, numberOfBalls, arrayOfSprings, numberOfSprings);
 
-	for (int j = 0; j < numberOfBalls; j++)
-	{
-		if (!arrayOfBalls[j]._physicsObject._isFixedPoint)
-		{
-			arrayOfBalls[j]._physicsObject.AddForce(Vector2(0, gravity * arrayOfBalls[j]._physicsObject._mass));
-			//arrayOfBalls[j]._physicsObject.AddForce(arrayOfBalls[j]._physicsObject._velocity * -1);//viscous friction
-		}
-	}
 	//physics object have v for t0+delta/2 
 
 	for (int i = 0; i < numberOfBalls; i++)
@@ -301,4 +273,60 @@ void PhysicsEngine::ProcessColition(Ball  &ball1, Ball &ball2)
 			ball1._physicsObject._pos = ball1._physicsObject._pos - CopycentersDirVec * (distance * ball2._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
 			ball2._physicsObject._pos = ball2._physicsObject._pos + CopycentersDirVec * (distance * ball1._physicsObject._mass / (ball1._physicsObject._mass + ball2._physicsObject._mass));
 		}*/
+}
+
+Matrix PhysicsEngine::CalculateConstrainForces(Ball arrayOfBalls[], int numberOfBalls, LinearConstraint arrayOfConstraints[], int numberOfConstrtain)
+{
+	//JWJ^t*x = -Jdot*qdot-JWQ - ks*C - kd*Cdot the last part with C 
+
+	//evaluate J and Jdot 2n*m
+	// q 1*2n
+
+	Matrix* arrayJ = new Matrix[numberOfConstrtain];
+	Matrix* arrayJdot = new Matrix[numberOfConstrtain];
+	for (int i = 0; i < numberOfConstrtain; i++)
+	{
+		arrayJ[i] = arrayOfConstraints[i].EvaluateJacobian(numberOfBalls);
+		arrayJdot[i] = arrayOfConstraints[i].EvaluateJacobianTimeDerivative(numberOfBalls);
+	}
+	Matrix J = J.ConcatenateMatrix(arrayJ, numberOfConstrtain, 1, numberOfBalls);
+	Matrix Jdot = Jdot.ConcatenateMatrix(arrayJ, numberOfConstrtain, 1, numberOfBalls);
+
+	//need to construct the Q matrix
+	Matrix Q = Matrix(2*numberOfBalls,1);
+
+	//need to construct matrix of velocities qdot
+	Matrix qdot = Matrix(2 * numberOfBalls, 1);
+
+
+	Matrix W = Matrix(2 * numberOfBalls, 2*numberOfBalls);
+	for (int i = 0; i < W.rows_; i++)
+	{
+		if (i % 2 == 0)
+		{
+			Q.p[i][1] = arrayOfBalls[i / 2]._physicsObject._totalForce.x;
+			qdot.p[2 * i + 1][1] = arrayOfBalls[i / 2]._physicsObject._velocity.x;
+		}
+		else
+		{
+			Q.p[i + 1][1] = arrayOfBalls[i / 2]._physicsObject._totalForce.y;
+			qdot.p[2 * i + 1][1] = arrayOfBalls[i / 2]._physicsObject._velocity.y;
+		}
+
+		for (int j = 0; j < W.cols_; j++)
+		{
+			if (i == j)
+			{
+				W.p[i][j] = 1 / arrayOfBalls[i/2]._physicsObject._mass;
+			}
+		}
+	}
+
+	//now we forme the matrix A and be of our equation Ax=B
+
+	Matrix A = (J * W).MatrixMultiplyByMatrixTransform(J);
+	Matrix B = -1 * Jdot * qdot - 1 * J * W * Q;
+
+	return A;
+
 }

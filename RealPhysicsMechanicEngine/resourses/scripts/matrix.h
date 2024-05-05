@@ -25,6 +25,7 @@ class Matrix {
         Matrix& operator/=(double);
         Matrix  operator^(int);
         
+        Matrix ConcatenateMatrix(Matrix arrayOfMatrix[], int numberOfMatrix, int rows, int cols);
         friend std::ostream& operator<<(std::ostream&, const Matrix&);
         friend std::istream& operator>>(std::istream&, Matrix&);
 
@@ -45,10 +46,14 @@ class Matrix {
         void readSolutionsFromRREF(std::ostream& os);
         Matrix inverse();
 
-    private:
-        int rows_, cols_;
-        double **p;
+        Matrix MatrixMultiplyByMatrixTransform(Matrix);
 
+        int rows_, cols_;
+        double** p; //this is likly stupid but whatever
+
+
+    private:
+        
         void allocSpace();
         Matrix expHelper(const Matrix&, int);
 };

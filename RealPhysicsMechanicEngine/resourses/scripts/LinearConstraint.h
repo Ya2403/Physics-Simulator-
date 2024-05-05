@@ -11,8 +11,8 @@ public:
 	LinearConstraint(PhysicsObject& firstPoint, PhysicsObject& secondPoint, int index1, int index2, double initialLenght);
 	double EvaluateConstraintFunction(); 
 	double EvaluateFirstTimeDerivatie();;
-	Matrix EvaluateJacobian();
-	Matrix EvaluateJacobianTimeDerivative();
+	Matrix EvaluateJacobian(int);
+	Matrix EvaluateJacobianTimeDerivative(int );
 	
 	
 private:

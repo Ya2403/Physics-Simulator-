@@ -1,5 +1,14 @@
 #include "LinearConstraint.h"
 
+
+LinearConstraint::LinearConstraint()
+{}
+
+LinearConstraint::~LinearConstraint()
+{
+}
+
+
 LinearConstraint::LinearConstraint(PhysicsObject& firstPoint, PhysicsObject& secondPoint):
 _firstAttachmentPoint(&firstPoint), _secondAttachmentPoint(&secondPoint), _initialLenght(firstPoint._pos.Distance(secondPoint._pos))
 {
@@ -27,22 +36,30 @@ double LinearConstraint::EvaluateFirstTimeDerivatie()
 }
 
 
-//J = dC/dr matrix is [jx, jy]
-Matrix LinearConstraint::EvaluateJacobian()
+//J = dC/dr matrix is [jx, jy] 
+Matrix LinearConstraint::EvaluateJacobian(int numberOfObjects)
 {
 	Vector2 vectorJ = (_firstAttachmentPoint->_pos - _secondAttachmentPoint->_pos) * 2;
-	double J[4] = { vectorJ.x, vectorJ.y, vectorJ.x, vectorJ.y };
+	unique_ptr<double[]> J (new double[2*numberOfObjects] {0});
+	J.get()[_firstAttachmentPointIndex * 2] = vectorJ.x;
+	J.get()[_firstAttachmentPointIndex * 2 + 1] = vectorJ.y;
+
+	J.get()[_secondAttachmentPointIndex * 2] = vectorJ.x;
+	J.get()[_secondAttachmentPointIndex * 2 + 1] = vectorJ.y;
+
+
+	return Matrix((double**)J.get(), 1, 2 * numberOfObjects);
 }
 
-Matrix LinearConstraint::EvaluateJacobianTimeDerivative()
+Matrix LinearConstraint::EvaluateJacobianTimeDerivative(int numberOfObjects)
 {
 	Vector2 vectorJDot = (_firstAttachmentPoint->_velocity - _secondAttachmentPoint->_velocity) * 2;
-	double J[1][2*maxNumberOfObjects] = {0};
-	J[1][_firstAttachmentPointIndex * 2] = vectorJDot.x;
-	J[1][_firstAttachmentPointIndex * 2+1] = vectorJDot.y;
+	unique_ptr<double[]> J (new double[2*numberOfObjects] {0});
+	J.get()[_firstAttachmentPointIndex * 2] = vectorJDot.x;
+	J.get()[_firstAttachmentPointIndex * 2+1] = vectorJDot.y;
 
-	J[1][_secondAttachmentPointIndex * 2] = vectorJDot.x;
-	J[1][_secondAttachmentPointIndex * 2+1] = vectorJDot.y;
+	J.get()[_secondAttachmentPointIndex * 2] = vectorJDot.x;
+	J.get()[_secondAttachmentPointIndex * 2+1] = vectorJDot.y;
 
-	return Matrix((double**)J, 1, maxNumberOfObjects);
+	return Matrix((double**)(J.get()), 1, 2 * numberOfObjects);
 }

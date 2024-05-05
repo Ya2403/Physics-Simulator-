@@ -47,6 +47,23 @@ Matrix::~Matrix()
     delete[] p;
 }
 
+//concatenates n matrix of same format rows*cols
+Matrix Matrix::ConcatenateMatrix(Matrix arrayOfMatrix[], int numberOfMatrix, int rows, int cols)
+{
+    Matrix resMatrix = Matrix(rows * numberOfMatrix, cols);
+    for (int i = 0; i < numberOfMatrix; i++)
+    {
+        for (int j = 0; j < rows; j++)
+        {
+            for (int k = 0; k < cols; k++)
+            {
+                resMatrix.p[numberOfMatrix * rows + j][k] = arrayOfMatrix[i](j, cols);
+            }
+        }
+    }
+    return resMatrix;
+}
+
 Matrix::Matrix(const Matrix& m) : rows_(m.rows_), cols_(m.cols_)
 {
     allocSpace();
@@ -461,6 +478,20 @@ Matrix Matrix::inverse()
         }
     }
     return AInverse;
+}
+
+Matrix Matrix::MatrixMultiplyByMatrixTransform(Matrix a)
+{
+    Matrix temp(rows_, a.rows_);
+    for (int i = 0; i < temp.rows_; ++i) {
+        for (int j = 0; j < temp.cols_; ++j) {
+            for (int k = 0; k < cols_; ++k) {
+                temp.p[i][j] += (p[i][k] *  a.p[j][k]);
+            }
+        }
+    }
+    return (temp);
+
 }
 
 

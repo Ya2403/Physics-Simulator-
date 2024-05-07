@@ -25,6 +25,7 @@ class Matrix {
         Matrix& operator/=(double);
         Matrix  operator^(int);
         
+        Matrix conjugateGradientSolver(const Matrix& A, const Matrix& B);
         Matrix ConcatenateMatrix(Matrix arrayOfMatrix[], int numberOfMatrix, int rows, int cols);
         friend std::ostream& operator<<(std::ostream&, const Matrix&);
         friend std::istream& operator>>(std::istream&, Matrix&);
@@ -46,7 +47,8 @@ class Matrix {
         void readSolutionsFromRREF(std::ostream& os);
         Matrix inverse();
 
-        Matrix MatrixMultiplyByMatrixTransform(Matrix);
+        Matrix MatrixMultiplyByMatrixTransformRight(Matrix);
+        Matrix MatrixMultiplyByMatrixTransformOnTheLeft(Matrix);
 
         int rows_, cols_;
         double** p; //this is likly stupid but whatever

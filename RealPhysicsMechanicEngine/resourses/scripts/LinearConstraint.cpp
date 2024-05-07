@@ -39,27 +39,38 @@ double LinearConstraint::EvaluateFirstTimeDerivatie()
 //J = dC/dr matrix is [jx, jy] 
 Matrix LinearConstraint::EvaluateJacobian(int numberOfObjects)
 {
+	Matrix resMatrix = Matrix(1, 2 * numberOfObjects);
+
 	Vector2 vectorJ = (_firstAttachmentPoint->_pos - _secondAttachmentPoint->_pos) * 2;
-	unique_ptr<double[]> J (new double[2*numberOfObjects] {0});
-	J.get()[_firstAttachmentPointIndex * 2] = vectorJ.x;
-	J.get()[_firstAttachmentPointIndex * 2 + 1] = vectorJ.y;
 
-	J.get()[_secondAttachmentPointIndex * 2] = vectorJ.x;
-	J.get()[_secondAttachmentPointIndex * 2 + 1] = vectorJ.y;
+	if (!_firstAttachmentPoint->_isFixedPoint)
+	{
+		resMatrix.p[0][_firstAttachmentPointIndex * 2] = vectorJ.x;
+		resMatrix.p[0][_firstAttachmentPointIndex * 2 + 1] = vectorJ.y;
+	}
+	
+	if (!_secondAttachmentPoint->_isFixedPoint)
+	{
+		resMatrix.p[0][_secondAttachmentPointIndex * 2] = -vectorJ.x;
+		resMatrix.p[0][_secondAttachmentPointIndex * 2 + 1] = -vectorJ.y;
+	}
+	
 
-
-	return Matrix((double**)J.get(), 1, 2 * numberOfObjects);
+	return resMatrix;
 }
 
 Matrix LinearConstraint::EvaluateJacobianTimeDerivative(int numberOfObjects)
 {
+	Matrix resMatrix = Matrix(1, 2 * numberOfObjects);
+
 	Vector2 vectorJDot = (_firstAttachmentPoint->_velocity - _secondAttachmentPoint->_velocity) * 2;
 	unique_ptr<double[]> J (new double[2*numberOfObjects] {0});
-	J.get()[_firstAttachmentPointIndex * 2] = vectorJDot.x;
-	J.get()[_firstAttachmentPointIndex * 2+1] = vectorJDot.y;
 
-	J.get()[_secondAttachmentPointIndex * 2] = vectorJDot.x;
-	J.get()[_secondAttachmentPointIndex * 2+1] = vectorJDot.y;
+	resMatrix.p[0][_firstAttachmentPointIndex * 2] = vectorJDot.x;
+	resMatrix.p[0][_firstAttachmentPointIndex * 2 + 1] = vectorJDot.y;
+				
+	resMatrix.p[0][_secondAttachmentPointIndex * 2] = -vectorJDot.x;
+	resMatrix.p[0][_secondAttachmentPointIndex * 2 + 1] = -vectorJDot.y;
 
-	return Matrix((double**)(J.get()), 1, 2 * numberOfObjects);
+	return resMatrix;
 }

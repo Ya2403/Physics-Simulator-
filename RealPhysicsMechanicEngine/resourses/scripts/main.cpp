@@ -89,18 +89,19 @@ int main(int argc, char* argv[])
 	Ball arrayOfBalls[20];
 	Spring arrayOfSprings[10];
 	LinearConstraint arrayOfConstraints[10];
-	int numberOfConstraints = 1;
-	int numOfBall = 2;
-	int numOfSpring = 1;
+	int numberOfConstraints = 2;
+	int numOfBall = 3;
+	int numOfSpring = 0;
 	int windowHight = 800;
 	int windowWidht = 800;
 
 
 	arrayOfBalls[0] = Ball(45, Vector2(0, 0), Vector2(0, 0), 1, Vector2(0, 0), true);
-	arrayOfBalls[1] = Ball(45, Vector2(0, 0), Vector2(0,-100), 1, Vector2(0, 0), false);
-	//arrayOfBalls[2] = Ball(45, Vector2(0, 0), Vector2(200,0), 1, Vector2(0, 0), false);
+	arrayOfBalls[1] = Ball(45, Vector2(100, 0), Vector2(0,-100), 1, Vector2(0, 0), false);
+	arrayOfBalls[2] = Ball(45, Vector2(-100, 0), Vector2(0,-200), 1, Vector2(0, 0), false);
 	
 	arrayOfConstraints[0] = LinearConstraint(arrayOfBalls[0]._physicsObject, arrayOfBalls[1]._physicsObject, 0, 1, 100);
+	arrayOfConstraints[1] = LinearConstraint(arrayOfBalls[1]._physicsObject, arrayOfBalls[2]._physicsObject, 1, 2, 100);
 
 
 	arrayOfSprings[0] = Spring(arrayOfBalls[0]._physicsObject, arrayOfBalls[1]._physicsObject, 1000000);
@@ -125,7 +126,7 @@ int main(int argc, char* argv[])
 	double velociyOmega1 = 0;
 	bool flag;
 
-	while (currentTime < 100)
+	while (currentTime < 10)
 	{
 		energy = 0;
 		energy2 = 0;
@@ -140,23 +141,23 @@ int main(int argc, char* argv[])
 			
 		}
 
-		/*for (int i = 0; i < numOfSpring; i++)
+		for (int i = 0; i < numOfSpring; i++)
 		{
 			energy += arrayOfSprings[i]._stiffness * pow(arrayOfSprings[i]._connectionPoint1->_pos.Distance(arrayOfSprings[i]._connectionPoint2->_pos) - arrayOfSprings[i]._initianLenght, 2);
-		}*/
+		}
 		
-		/*teta = CalculateTeta(arrayOfBalls, prevteta, ballIndex -1, ballIndex);
+		teta = CalculateTeta(arrayOfBalls, prevteta, ballIndex -1, ballIndex);
 		
-		velociyOmega1 = (teta - prevteta) / deltaTime;*/
+		velociyOmega1 = (teta - prevteta) / deltaTime;
 		
 		physics.update(arrayOfBalls, numOfBall, arrayOfSprings, numOfSpring, deltaTime, arrayOfConstraints, numberOfConstraints); // update engine should include graphics update and physics update
 
-		/*if (currFileTime >= writeinFileDeltaTime)
+		if (currFileTime >= writeinFileDeltaTime)
 		{
 			
 			textFile << currentTime << " " << arrayOfBalls[ballIndex]._physicsObject._pos.x << " " << arrayOfBalls[ballIndex]._physicsObject._pos.y << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.x << " " << arrayOfBalls[ballIndex]._physicsObject._velocity.y << " " << teta <<" "<< velociyOmega1 <<" " << energy << "\n";
 			currFileTime = 0;
-		}*/
+		}
 
 		currentTime += deltaTime;
 		currFileTime += deltaTime;
@@ -169,6 +170,5 @@ int main(int argc, char* argv[])
 	double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 	cout << "Time taken by program is : ";
 	cout<<setprecision(3)<< time_taken << std::endl;
-
 	return 0;
 }

@@ -3,6 +3,7 @@
  */
 
 #include <stdexcept>
+#include <cmath>
 #include "matrix.h"
 
 #define EPS 1e-10
@@ -57,7 +58,7 @@ Matrix Matrix::ConcatenateMatrix(Matrix arrayOfMatrix[], int numberOfMatrix, int
         {
             for (int k = 0; k < cols; k++)
             {
-                resMatrix.p[numberOfMatrix * rows + j][k] = arrayOfMatrix[i](j, cols);
+                resMatrix.p[i* rows + j][k] = arrayOfMatrix[i](j, k);
             }
         }
     }
@@ -480,13 +481,27 @@ Matrix Matrix::inverse()
     return AInverse;
 }
 
-Matrix Matrix::MatrixMultiplyByMatrixTransform(Matrix a)
+Matrix Matrix::MatrixMultiplyByMatrixTransformRight(Matrix a)
 {
     Matrix temp(rows_, a.rows_);
     for (int i = 0; i < temp.rows_; ++i) {
         for (int j = 0; j < temp.cols_; ++j) {
             for (int k = 0; k < cols_; ++k) {
                 temp.p[i][j] += (p[i][k] *  a.p[j][k]);
+            }
+        }
+    }
+    return (temp);
+
+}
+
+Matrix Matrix::MatrixMultiplyByMatrixTransformOnTheLeft(Matrix a)
+{
+    Matrix temp(cols_, a.cols_);
+    for (int i = 0; i < temp.rows_; ++i) {
+        for (int j = 0; j < temp.cols_; ++j) {
+            for (int k = 0; k < rows_; ++k) {
+                temp.p[i][j] += (p[k][i] * a.p[k][j]);
             }
         }
     }
@@ -518,6 +533,34 @@ Matrix Matrix::expHelper(const Matrix& m, int num)
         return m * expHelper(m * m, (num-1)/2);
     }
 }
+
+
+Matrix Matrix::conjugateGradientSolver(const Matrix& A, const Matrix& B)
+{   
+    const double NEARZERO = 1.0e-10;
+    double TOLERANCE = 1.0e-10;
+    Matrix x(A.cols_, 1);
+
+
+    Matrix residual = B - A * x;
+    Matrix search_direction = residual;
+    double old_resid_norm = sqrt(residual.MatrixMultiplyByMatrixTransformOnTheLeft(residual)(0,0));
+   
+
+    while(old_resid_norm > TOLERANCE)
+    {
+        Matrix A_search_direction = A * search_direction;
+        double step_size = pow(old_resid_norm,2) /( (search_direction.transpose() * A_search_direction)(0, 0));
+        x = x + step_size * search_direction;
+
+        residual = residual - step_size * A_search_direction;
+        double new_resid_norm = sqrt(residual.MatrixMultiplyByMatrixTransformOnTheLeft(residual)(0, 0));
+        search_direction = residual + ((new_resid_norm / old_resid_norm) * (new_resid_norm / old_resid_norm)) * search_direction;
+        old_resid_norm = new_resid_norm;
+    }
+    return x;       
+}
+
 
 /* NON-MEMBER FUNCTIONS
  ********************************/

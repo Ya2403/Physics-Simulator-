@@ -74,23 +74,22 @@ void GraphicsSystem::Update()
 
 void GraphicsSystem::Render(Ball arrayOfBalls[], int numberOfBalls, Spring arrayOfSprings[], int numberOfSprings)
 {
-	for (int i = 0; i < numberOfBalls; i++)
-	{
-		SDL_SetRenderDrawColor(_window._renderer, 255, 0, 255, 255);
-		//DrawImage(arrayOfBalls[i]._radius, arrayOfBalls[i]._radius, arrayOfBalls[i]._physicsObject._pos);
-		DrawCircle(arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y, arrayOfBalls[i]._radius);
-		SDL_RenderDrawPoint(_window._renderer, arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y);
-	}
-
-	for (int i = 0; i < numberOfSprings; i++)
-	{
-		SDL_SetRenderDrawColor(_window._renderer, 255, 0, 0, 255);
-		DrawSpring(arrayOfSprings[i]._connectionPoint1->_pos, arrayOfSprings[i]._connectionPoint2->_pos);
-	}
-
-	SDL_SetRenderDrawColor(_window._renderer, 255, 255, 255, 255);
-	SDL_RenderPresent(_window._renderer);
 	SDL_RenderClear(_window._renderer);
+	//for (int i = 0; i < numberOfBalls; i++)
+	//{
+	//	//SDL_SetRenderDrawColor(_window._renderer, 255, 0, 255, 255);
+	//	//DrawImage(arrayOfBalls[i]._radius, arrayOfBalls[i]._radius, arrayOfBalls[i]._physicsObject._pos);
+	//	//DrawCircle(arrayOfBalls[i]._physicsObject._pos.x, arrayOfBalls[i]._physicsObject._pos.y, arrayOfBalls[i]._radius);
+	//}
+
+	//for (int i = 0; i < numberOfSprings; i++)
+	//{
+	//	SDL_SetRenderDrawColor(_window._renderer, 255, 0, 0, 255);
+	//	DrawSpring(arrayOfSprings[i]._connectionPoint1->_pos, arrayOfSprings[i]._connectionPoint2->_pos);
+	//}
+
+	//SDL_SetRenderDrawColor(_window._renderer, 255, 255, 255, 255);
+	SDL_RenderPresent(_window._renderer);
 }
 
 GraphicsSystem::~GraphicsSystem()

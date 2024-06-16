@@ -48,6 +48,12 @@
     <ClCompile Include="..\resourses\scripts\SystemState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\resourses\scripts\LinearConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\resourses\scripts\matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\resourses\scripts\Window.h">
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\resourses\scripts\SystemState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\LinearConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resourses\scripts\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

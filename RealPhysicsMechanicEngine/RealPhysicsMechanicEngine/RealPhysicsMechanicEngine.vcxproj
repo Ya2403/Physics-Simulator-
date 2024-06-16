@@ -23,7 +23,9 @@
     <ClCompile Include="..\resourses\scripts\Engine.cpp" />
     <ClCompile Include="..\resourses\scripts\ForceGenerator.cpp" />
     <ClCompile Include="..\resourses\scripts\GraphicsSystem.cpp" />
+    <ClCompile Include="..\resourses\scripts\LinearConstraint.cpp" />
     <ClCompile Include="..\resourses\scripts\main.cpp" />
+    <ClCompile Include="..\resourses\scripts\matrix.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsEngine.cpp" />
     <ClCompile Include="..\resourses\scripts\PhysicsObject.cpp" />
     <ClCompile Include="..\resourses\scripts\Spring.cpp" />
@@ -36,6 +38,8 @@
     <ClInclude Include="..\resourses\scripts\Engine.h" />
     <ClInclude Include="..\resourses\scripts\ForceGenerator.h" />
     <ClInclude Include="..\resourses\scripts\GraphicsSystem.h" />
+    <ClInclude Include="..\resourses\scripts\LinearConstraint.h" />
+    <ClInclude Include="..\resourses\scripts\matrix.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsEngine.h" />
     <ClInclude Include="..\resourses\scripts\PhysicsObject.h" />
     <ClInclude Include="..\resourses\scripts\Spring.h" />
@@ -69,6 +73,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -96,6 +101,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\projects\physicsSimulator\RealPhysicsMechanicEngine\deps\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\projects\physicsSimulator\RealPhysicsMechanicEngine\deps\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\projects\physicsSimulator\RealPhysicsMechanicEngine\deps\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\projects\physicsSimulator\RealPhysicsMechanicEngine\deps\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -133,6 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +164,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

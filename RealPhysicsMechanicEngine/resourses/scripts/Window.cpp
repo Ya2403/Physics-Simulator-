@@ -17,6 +17,8 @@ Window::~Window()
 	SDL_DestroyWindow(_window);
 	SDL_DestroyRenderer(_renderer);
 	SDL_Quit();
+	delete _renderer;
+	delete _window;
 }
 
 bool Window::init()
